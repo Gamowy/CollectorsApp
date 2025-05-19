@@ -1,4 +1,4 @@
-package org.example.project
+package org.example.collectorsapp
 
 import android.os.Build
 

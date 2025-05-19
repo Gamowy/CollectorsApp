@@ -1,4 +1,4 @@
-package org.example.project
+package org.example.collectorsapp
 
 interface Platform {
     val name: String
