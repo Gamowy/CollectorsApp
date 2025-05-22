@@ -12,45 +12,68 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.example.collectorsapp.components.AppTitle
-import org.example.collectorsapp.components.NavigationBar
-import org.example.collectorsapp.components.NewCollectionButton
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import kotlinx.serialization.Serializable
+import org.example.collectorsapp.components.NavBar
 import org.example.collectorsapp.views.CollectionsView
+import org.example.collectorsapp.views.GeminiView
+import org.example.collectorsapp.views.SettingsView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     MaterialTheme {
+        val navController = rememberNavController()
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.safeDrawing),
             topBar = {
-                TopAppBar(
-                    title = {
-                        AppTitle()
-                    })
+                Text(
+                    text = "Collectors App",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(4.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
             },
             bottomBar = {
-                BottomAppBar(
-                    modifier = Modifier.height(80.dp)
-                ) {
-                    NavigationBar()
+                BottomAppBar {
+                    NavBar(navController)
                 }
             },
-            floatingActionButton = {
-                NewCollectionButton()
-            },
-            floatingActionButtonPosition = androidx.compose.material3.FabPosition.End
         ) {
-            CollectionsView(modifier = Modifier.padding(it))
+            val navGraph = navController.createGraph(startDestination = CollectionsView) {
+                composable<CollectionsView> {
+                    CollectionsView()
+                }
+                composable<GeminiView> {
+                    GeminiView()
+                }
+                composable<SettingsView> {
+                    SettingsView()
+                }
+            }
+            NavHost(
+                navController = navController,
+                graph = navGraph,
+                modifier = Modifier.padding(it)
+            )
         }
     }
 }
 
+@Serializable
+object CollectionsView
+@Serializable
+object GeminiView
+@Serializable
+object SettingsView

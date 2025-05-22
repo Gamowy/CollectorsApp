@@ -1,5 +1,6 @@
 package org.example.collectorsapp.views
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,8 +14,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.search
 import org.example.collectorsapp.components.CollectionCard
-import org.example.collectorsapp.components.NavigationBar
+import org.example.collectorsapp.components.NewCollectionButton
 import org.example.collectorsapp.components.SearchBar
 import org.example.collectorsapp.model.Collection
 import org.example.collectorsapp.model.CollectionCategory
@@ -66,22 +69,32 @@ val collectionList  = listOf(
 )
 
 @Composable
-fun CollectionsView(modifier: Modifier) {
+fun CollectionsView(modifier: Modifier = Modifier) {
     var collectionList by remember { mutableStateOf(collectionList) }
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(12.dp, 0.dp, 12.dp, 0.dp)
-    ) {
-        SearchBar("", onValueChange = {
-            collectionList = searchCollections(it)
-        })
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn {
-            items(collectionList.size) { index ->
-                CollectionCard(collection = collectionList[index])
-                Spacer(modifier = Modifier.height(12.dp))
+    Box {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.padding(12.dp, 0.dp, 12.dp, 0.dp)
+        ) {
+            SearchBar("", onValueChange = {
+                collectionList = searchCollections(it)
+            })
+            Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn {
+                items(collectionList.size) { index ->
+                    CollectionCard(collection = collectionList[index])
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
+        NewCollectionButton(
+            "New collection",
+            Res.drawable.search,
+            onClick = {},
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.BottomEnd)
+        )
     }
 }
 
