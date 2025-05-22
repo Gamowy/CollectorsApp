@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.example.collectorsapp.components.CollectionCard
+import org.example.collectorsapp.components.NavigationBar
 import org.example.collectorsapp.components.SearchBar
 import org.example.collectorsapp.model.Collection
 import org.example.collectorsapp.model.CollectionCategory
