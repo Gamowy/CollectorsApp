@@ -1,14 +1,15 @@
 package org.example.collectorsapp
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +24,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import kotlinx.serialization.Serializable
 import org.example.collectorsapp.components.NavBar
+import org.example.collectorsapp.theme.DarkColorScheme
+import org.example.collectorsapp.theme.LightColorScheme
+import org.example.collectorsapp.theme.rippleConfiguration
 import org.example.collectorsapp.views.CollectionsView
 import org.example.collectorsapp.views.GeminiView
 import org.example.collectorsapp.views.SettingsView
@@ -30,43 +34,48 @@ import org.example.collectorsapp.views.SettingsView
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    MaterialTheme {
-        val navController = rememberNavController()
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing),
-            topBar = {
-                Text(
-                    text = "Collectors App",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(4.dp),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+    val darkTheme = isSystemInDarkTheme()
+    MaterialTheme(
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    ) {
+        CompositionLocalProvider(LocalRippleConfiguration provides rippleConfiguration) {
+            val navController = rememberNavController()
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.safeDrawing),
+                topBar = {
+                    Text(
+                        text = "Collectors App",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                bottomBar = {
+                    BottomAppBar {
+                        NavBar(navController)
+                    }
+                },
+            ) {
+                val navGraph = navController.createGraph(startDestination = CollectionsView) {
+                    composable<CollectionsView> {
+                        CollectionsView()
+                    }
+                    composable<GeminiView> {
+                        GeminiView()
+                    }
+                    composable<SettingsView> {
+                        SettingsView()
+                    }
+                }
+                NavHost(
+                    navController = navController,
+                    graph = navGraph,
+                    modifier = Modifier.padding(it)
                 )
-            },
-            bottomBar = {
-                BottomAppBar {
-                    NavBar(navController)
-                }
-            },
-        ) {
-            val navGraph = navController.createGraph(startDestination = CollectionsView) {
-                composable<CollectionsView> {
-                    CollectionsView()
-                }
-                composable<GeminiView> {
-                    GeminiView()
-                }
-                composable<SettingsView> {
-                    SettingsView()
-                }
             }
-            NavHost(
-                navController = navController,
-                graph = navGraph,
-                modifier = Modifier.padding(it)
-            )
         }
     }
 }

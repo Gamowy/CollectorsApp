@@ -6,6 +6,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +17,7 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.gemini
 import kotlinproject.composeapp.generated.resources.home
 import kotlinproject.composeapp.generated.resources.settings
+import kotlinx.coroutines.flow.collectLatest
 import org.example.collectorsapp.CollectionsView
 import org.example.collectorsapp.GeminiView
 import org.example.collectorsapp.SettingsView
@@ -45,7 +47,7 @@ val navigationItems = listOf(
 
 @Composable
 fun NavBar(
-    navController: NavController,
+    navController: NavController
 ) {
     var selectedIndex by remember { mutableStateOf(0)}
     NavigationBar {
@@ -65,6 +67,15 @@ fun NavBar(
                 },
                 selected = selectedIndex == index
             )
+        }
+    }
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        val currentRoute = destination.route
+        val currentIndex = navigationItems.indexOfFirst { it.route == currentRoute }
+        selectedIndex = if (currentIndex != -1) {
+            currentIndex
+        } else {
+            0
         }
     }
 }

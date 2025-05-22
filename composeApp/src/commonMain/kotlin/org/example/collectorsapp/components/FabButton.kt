@@ -20,7 +20,6 @@ import org.jetbrains.compose.resources.stringResource
 fun NewCollectionButton(text: String, icon: DrawableResource, onClick: () -> Unit, modifier: Modifier = Modifier) {
     ExtendedFloatingActionButton(
         modifier = modifier,
-        containerColor = Color(0xFFEADCF3),
         onClick = { onClick() },
         contentColor = Color.Black
     ) {

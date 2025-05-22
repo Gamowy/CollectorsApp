@@ -3,6 +3,7 @@ package org.example.collectorsapp.views
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -71,10 +72,13 @@ val collectionList  = listOf(
 @Composable
 fun CollectionsView(modifier: Modifier = Modifier) {
     var collectionList by remember { mutableStateOf(collectionList) }
-    Box {
+    Box (modifier = modifier
+        .fillMaxSize()
+        .padding(12.dp, 0.dp, 12.dp, 0.dp)
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.padding(12.dp, 0.dp, 12.dp, 0.dp)
+
         ) {
             SearchBar("", onValueChange = {
                 collectionList = searchCollections(it)
@@ -98,7 +102,7 @@ fun CollectionsView(modifier: Modifier = Modifier) {
     }
 }
 
-fun searchCollections(query: String): List<Collection> {
+private fun searchCollections(query: String): List<Collection> {
     return collectionList.filter { collection ->
         collection.name.contains(query, ignoreCase = true) ||
                 collection.description?.contains(query, ignoreCase = true) == true ||
