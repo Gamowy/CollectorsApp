@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.search
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import kotlinproject.composeapp.generated.resources.search_bar_hint
+import kotlinproject.composeapp.generated.resources.search_bar_icon_description
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +35,7 @@ fun SearchBar(searchQuery: String, onValueChange: (String) -> Unit) {
             searchText = it
             onValueChange(it)
         },
-        placeholder = { Text("Search for collection...") },
+        placeholder = { Text(stringResource(Res.string.search_bar_hint)) },
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
@@ -45,7 +48,7 @@ fun SearchBar(searchQuery: String, onValueChange: (String) -> Unit) {
         trailingIcon = {
             Icon(
                 painter = painterResource(Res.drawable.search),
-                contentDescription = "Search Icon",
+                contentDescription = stringResource(Res.string.search_bar_icon_description),
                 tint = Color.Gray
             )
         },

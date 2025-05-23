@@ -22,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
+import kotlinproject.composeapp.generated.resources.Res
 import kotlinx.serialization.Serializable
 import org.example.collectorsapp.components.NavBar
 import org.example.collectorsapp.theme.DarkColorScheme
@@ -30,11 +31,15 @@ import org.example.collectorsapp.theme.rippleConfiguration
 import org.example.collectorsapp.views.CollectionsView
 import org.example.collectorsapp.views.GeminiView
 import org.example.collectorsapp.views.SettingsView
+import org.jetbrains.compose.resources.stringResource
+import kotlinproject.composeapp.generated.resources.app_name
+import org.example.collectorsapp.views.AddCollectionView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     val darkTheme = isSystemInDarkTheme()
+    val ADD_COLLECTION_VIEW = "add_collection"
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
     ) {
@@ -46,7 +51,7 @@ fun App() {
                     .windowInsetsPadding(WindowInsets.safeDrawing),
                 topBar = {
                     Text(
-                        text = "Collectors App",
+                        text = stringResource(Res.string.app_name),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().padding(4.dp),
                         style = MaterialTheme.typography.titleLarge,
@@ -61,13 +66,16 @@ fun App() {
             ) {
                 val navGraph = navController.createGraph(startDestination = CollectionsView) {
                     composable<CollectionsView> {
-                        CollectionsView()
+                        CollectionsView(navController)
                     }
                     composable<GeminiView> {
                         GeminiView()
                     }
                     composable<SettingsView> {
                         SettingsView()
+                    }
+                    composable(ADD_COLLECTION_VIEW) {
+                        AddCollectionView()
                     }
                 }
                 NavHost(

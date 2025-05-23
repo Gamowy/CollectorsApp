@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.search
 import org.example.collectorsapp.components.CollectionCard
@@ -22,6 +23,9 @@ import org.example.collectorsapp.components.NewCollectionButton
 import org.example.collectorsapp.components.SearchBar
 import org.example.collectorsapp.model.Collection
 import org.example.collectorsapp.model.CollectionCategory
+import org.jetbrains.compose.resources.stringResource
+import kotlinproject.composeapp.generated.resources.button_new_collection
+import kotlinproject.composeapp.generated.resources.plus
 
 val collectionList  = listOf(
     Collection(
@@ -70,7 +74,10 @@ val collectionList  = listOf(
 )
 
 @Composable
-fun CollectionsView(modifier: Modifier = Modifier) {
+fun CollectionsView(
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     var collectionList by remember { mutableStateOf(collectionList) }
     Box (modifier = modifier
         .fillMaxSize()
@@ -92,9 +99,11 @@ fun CollectionsView(modifier: Modifier = Modifier) {
             }
         }
         NewCollectionButton(
-            "New collection",
-            Res.drawable.search,
-            onClick = {},
+            stringResource(Res.string.button_new_collection),
+            Res.drawable.plus,
+            onClick = {
+                navController.navigate("add_collection")
+            },
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomEnd)

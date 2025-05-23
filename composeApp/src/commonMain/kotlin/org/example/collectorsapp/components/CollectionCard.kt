@@ -29,9 +29,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.add_collection
+import kotlinproject.composeapp.generated.resources.estimated_value
+import kotlinproject.composeapp.generated.resources.image_collection_description
+import kotlinproject.composeapp.generated.resources.not_available_description
 import kotlinproject.composeapp.generated.resources.placeholder
 import org.example.collectorsapp.model.Collection
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CollectionCard(collection: Collection) {
@@ -55,13 +60,13 @@ fun CollectionCard(collection: Collection) {
                 if (collection.imageBitmap != null) {
                     Image(
                         bitmap = collection.imageBitmap,
-                        contentDescription = "Collection Image",
+                        contentDescription = stringResource(Res.string.image_collection_description),
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
                     Image(
                         painter = painterResource(Res.drawable.placeholder),
-                        contentDescription = "Collection Image",
+                        contentDescription = stringResource(Res.string.image_collection_description),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .size(128.dp)
@@ -89,7 +94,7 @@ fun CollectionCard(collection: Collection) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = collection.description ?: "No description available",
+                    text = collection.description ?: stringResource(Res.string.not_available_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 4,
@@ -97,7 +102,7 @@ fun CollectionCard(collection: Collection) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Estimated value: $${estimatedCollectionValue}",
+                    text = "${stringResource(Res.string.estimated_value)}${estimatedCollectionValue}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,

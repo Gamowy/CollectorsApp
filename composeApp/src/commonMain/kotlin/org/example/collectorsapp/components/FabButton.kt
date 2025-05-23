@@ -1,6 +1,7 @@
 package org.example.collectorsapp.components
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,6 +13,7 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.search
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.ui.unit.dp
 import kotlinproject.composeapp.generated.resources.add_collection
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource

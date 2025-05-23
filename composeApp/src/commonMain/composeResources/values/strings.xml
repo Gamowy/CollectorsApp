@@ -1,3 +1,29 @@
 <resources>
+    <!-- App -->
+    <string name="app_name">Collectors App</string>
+    <!-- CollectionCard -->
+    <string name="image_collection_description">Collection Image</string>
+    <string name="not_available_description">No description available</string>
+    <string name="estimated_value">Estimated value: $</string>
+    <!-- FabButton -->
     <string name="add_collection">Add collection</string>
+    <!-- NavBar -->
+    <string name="button_home_title">Home</string>
+    <string name="button_settings_title">Settings</string>
+    <string name="button_gemini_title">Gemini</string>
+    <string name="string_icon">Icon</string>
+    <!-- SearchBar -->
+    <string name="search_bar_hint">Search for collection...</string>
+    <string name="search_bar_icon_description">Search Icon</string>
+    <!-- CollectionsView -->
+    <string name="button_new_collection">New collection</string>
+    <!-- AddCollectionView -->
+    <string name="collection_image_text">Collection image</string>
+    <string name="collection_image_description">Add Collection Image</string>
+    <string name="collection_text_description">Collection details</string>
+    <string name="collection_name_label_input">Collection name</string>
+    <string name="collection_description_label_input">Collection description</string>
+    <string name="input_placeholder">Input</string>
+    <string name="collection_dropdown_label">Category</string>
+    <string name="button_create_collection">Create collection</string>
 </resources>

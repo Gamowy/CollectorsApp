@@ -14,31 +14,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.button_gemini_title
+import kotlinproject.composeapp.generated.resources.button_home_title
+import kotlinproject.composeapp.generated.resources.button_settings_title
+import kotlinproject.composeapp.generated.resources.estimated_value
 import kotlinproject.composeapp.generated.resources.gemini
 import kotlinproject.composeapp.generated.resources.home
 import kotlinproject.composeapp.generated.resources.settings
+import kotlinproject.composeapp.generated.resources.string_icon
 import kotlinx.coroutines.flow.collectLatest
 import org.example.collectorsapp.CollectionsView
 import org.example.collectorsapp.GeminiView
 import org.example.collectorsapp.SettingsView
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
-data class NavigationItem(val title: String, val icon: DrawableResource, val route: Any)
+
+data class NavigationItem(val title: StringResource, val icon: DrawableResource, val route: Any)
 
 val navigationItems = listOf(
     NavigationItem(
-        title = "Home",
+        title = Res.string.button_home_title,
         icon = Res.drawable.home,
         route = CollectionsView
     ),
     NavigationItem(
-        title = "Gemini",
+        title = Res.string.button_gemini_title,
         icon = Res.drawable.gemini,
         route = GeminiView
     ),
     NavigationItem(
-        title = "Settings",
+        title = Res.string.button_settings_title,
         icon = Res.drawable.settings,
         route = SettingsView
     ),
@@ -57,11 +65,11 @@ fun NavBar(
                     navController.navigate(item.route)
                     selectedIndex = index
                 },
-                label = { Text(item.title) },
+                label = { Text(stringResource(item.title)) },
                 icon = {
                     Icon(
                         painter = painterResource(item.icon),
-                        contentDescription = "${item.title} Icon",
+                        contentDescription = "${item.title} ${stringResource(Res.string.string_icon)}",
                         tint = Color.Black,
                     )
                 },
