@@ -1,12 +1,11 @@
 package org.example.collectorsapp.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,30 +13,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.button_new_collection
+import kotlinproject.composeapp.generated.resources.cancel_button
 import kotlinproject.composeapp.generated.resources.placeholder
 import org.example.collectorsapp.components.ClickableImage
 import org.example.collectorsapp.components.SimpleDropdownMenu
 import org.example.collectorsapp.model.CollectionCategory
-import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import kotlinproject.composeapp.generated.resources.collection_image_text
 import kotlinproject.composeapp.generated.resources.collection_image_description
@@ -46,18 +45,20 @@ import kotlinproject.composeapp.generated.resources.collection_name_label_input
 import kotlinproject.composeapp.generated.resources.collection_description_label_input
 import kotlinproject.composeapp.generated.resources.input_placeholder
 import kotlinproject.composeapp.generated.resources.collection_dropdown_label
-import kotlinproject.composeapp.generated.resources.plus
-import kotlinproject.composeapp.generated.resources.button_create_collection
-import org.example.collectorsapp.components.NewCollectionButton
+import kotlinproject.composeapp.generated.resources.save_button
 
 @Composable
-fun AddCollectionView(modifier: Modifier = Modifier) {
+fun AddCollectionView(navController: NavHostController, modifier: Modifier = Modifier) {
+    var collectionName by remember { mutableStateOf("") }
+    var collectionDescription by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(CollectionCategory.entries[0].name) }
 
     Box(
         modifier = modifier
             .padding(4.dp)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = modifier
@@ -68,7 +69,6 @@ fun AddCollectionView(modifier: Modifier = Modifier) {
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
             ) {
                 Text(
                     modifier = modifier
@@ -82,24 +82,24 @@ fun AddCollectionView(modifier: Modifier = Modifier) {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(4.dp)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
                 ClickableImage(
                     image = Res.drawable.placeholder,
                     contentDescription = stringResource(Res.string.collection_image_description),
                     onClick = { /*TODO*/ },
                     modifier = modifier
-                        .fillMaxWidth()
                         .height(150.dp)
                         .width(150.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.Gray)
                 )
             }
             Row(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
             ) {
                 Text(
                     modifier = modifier
@@ -114,29 +114,30 @@ fun AddCollectionView(modifier: Modifier = Modifier) {
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
             ) {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = collectionName,
+                    onValueChange = {
+                        collectionName = it
+                    },
                     label = { Text(stringResource(Res.string.collection_name_label_input)) },
                     placeholder = { Text(stringResource(Res.string.input_placeholder)) },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(4.dp)
                         .background(Color.White)
-                        .windowInsetsPadding(WindowInsets.safeDrawing)
                 )
             }
             Row(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
             ) {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = collectionDescription,
+                    onValueChange = {
+                        collectionDescription = it
+                    },
                     label = { Text(stringResource(Res.string.collection_description_label_input)) },
                     placeholder = { Text(stringResource(Res.string.input_placeholder)) },
                     modifier = modifier
@@ -144,14 +145,12 @@ fun AddCollectionView(modifier: Modifier = Modifier) {
                         .height(150.dp)
                         .padding(4.dp)
                         .background(Color.White)
-                        .windowInsetsPadding(WindowInsets.safeDrawing)
                 )
             }
             Row(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
             ) {
                 SimpleDropdownMenu(
                     label = stringResource(Res.string.collection_dropdown_label),
@@ -162,17 +161,24 @@ fun AddCollectionView(modifier: Modifier = Modifier) {
                         .fillMaxWidth()
                         .padding(4.dp)
                         .background(Color.White)
-                        .windowInsetsPadding(WindowInsets.safeDrawing)
                 )
             }
+            Row(horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp))
+            {
+                TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
+                    onClick = { navController.popBackStack() },
+                ) {
+                    Text(text = stringResource(Res.string.cancel_button), style = MaterialTheme.typography.titleMedium)
+                }
+                TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
+                    onClick = { /*TODO: Handle save action*/ },
+                ) {
+                    Text(text = stringResource(Res.string.save_button), style = MaterialTheme.typography.titleMedium)
+                }
+            }
         }
-        NewCollectionButton(
-            stringResource(Res.string.button_create_collection),
-            Res.drawable.plus,
-            onClick = { },
-            modifier = modifier
-                .padding(16.dp)
-                .align(Alignment.BottomCenter)
-        )
     }
 }

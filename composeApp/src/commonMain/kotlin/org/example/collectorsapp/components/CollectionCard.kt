@@ -2,10 +2,13 @@ package org.example.collectorsapp.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,24 +47,46 @@ fun CollectionCard(collection: Collection) {
 
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(200.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .weight(0.2f)
+            .padding(8.dp, 8.dp, 8.dp, 2.dp),
+            horizontalArrangement = Arrangement.Center,
+            )
+            {
+            Text(
+                text = collection.name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
         Row (
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+                .fillMaxSize()
+                .weight(1f)
+                .padding(8.dp, 2.dp, 8.dp, 8.dp)
             ,
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         )
         {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.fillMaxSize().weight(0.6f)
+                ) {
                 if (collection.imageBitmap != null) {
                     Image(
                         bitmap = collection.imageBitmap,
                         contentDescription = stringResource(Res.string.image_collection_description),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .size(128.dp)
+                            .clip(RoundedCornerShape(32.dp))
                     )
                 } else {
                     Image(
@@ -71,7 +96,6 @@ fun CollectionCard(collection: Collection) {
                         modifier = Modifier
                             .size(128.dp)
                             .clip(RoundedCornerShape(32.dp))
-                            .shadow(elevation = 20.dp)
                             .background(Color.White)
                         ,
                     )
@@ -83,31 +107,26 @@ fun CollectionCard(collection: Collection) {
                         )
                 }
             }
-            Spacer(modifier = Modifier.width(12.dp))
-            Column (modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = collection.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column (modifier = Modifier.fillMaxSize().weight(1f)) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = collection.description ?: stringResource(Res.string.not_available_description),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "${stringResource(Res.string.estimated_value)}${estimatedCollectionValue}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.align(Alignment.End)
-                )
+                Box (modifier = Modifier.fillMaxSize()){
+                    Text(
+                        text = collection.description
+                            ?: stringResource(Res.string.not_available_description),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 6,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "${stringResource(Res.string.estimated_value)}${estimatedCollectionValue}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                    )
+                }
             }
         }
     }

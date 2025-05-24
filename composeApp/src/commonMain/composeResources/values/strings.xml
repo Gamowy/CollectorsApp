@@ -7,6 +7,8 @@
     <string name="estimated_value">Estimated value: $</string>
     <!-- FabButton -->
     <string name="add_collection">Add collection</string>
+    <!-- TopBar -->
+    <string name="top_bar_back_button_description">Back</string>
     <!-- NavBar -->
     <string name="button_home_title">Home</string>
     <string name="button_settings_title">Settings</string>
@@ -26,4 +28,6 @@
     <string name="input_placeholder">Input</string>
     <string name="collection_dropdown_label">Category</string>
     <string name="button_create_collection">Create collection</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
 </resources>

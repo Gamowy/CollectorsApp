@@ -1,31 +1,26 @@
 package org.example.collectorsapp.components
 
-import androidx.compose.foundation.content.MediaType.Companion.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import androidx.navigation.navOptions
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.button_gemini_title
 import kotlinproject.composeapp.generated.resources.button_home_title
 import kotlinproject.composeapp.generated.resources.button_settings_title
-import kotlinproject.composeapp.generated.resources.estimated_value
 import kotlinproject.composeapp.generated.resources.gemini
 import kotlinproject.composeapp.generated.resources.home
 import kotlinproject.composeapp.generated.resources.settings
 import kotlinproject.composeapp.generated.resources.string_icon
-import kotlinx.coroutines.flow.collectLatest
-import org.example.collectorsapp.CollectionsView
-import org.example.collectorsapp.GeminiView
-import org.example.collectorsapp.SettingsView
+import org.example.collectorsapp.NavigationDestination
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -38,17 +33,17 @@ val navigationItems = listOf(
     NavigationItem(
         title = Res.string.button_home_title,
         icon = Res.drawable.home,
-        route = CollectionsView
+        route = NavigationDestination.CollectionsView
     ),
     NavigationItem(
         title = Res.string.button_gemini_title,
         icon = Res.drawable.gemini,
-        route = GeminiView
+        route = NavigationDestination.GeminiView
     ),
     NavigationItem(
         title = Res.string.button_settings_title,
         icon = Res.drawable.settings,
-        route = SettingsView
+        route = NavigationDestination.SettingsView
     ),
 )
 
@@ -62,7 +57,11 @@ fun NavBar(
         navigationItems.forEachIndexed { index, item ->
             NavigationBarItem(
                 onClick = {
-                    navController.navigate(item.route)
+                    navController.navigate(item.route, navOptions = navOptions {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(0) {inclusive = true}
+                    })
                     selectedIndex = index
                 },
                 label = { Text(stringResource(item.title)) },

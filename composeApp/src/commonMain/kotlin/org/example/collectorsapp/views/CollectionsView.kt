@@ -1,12 +1,12 @@
 package org.example.collectorsapp.views
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,9 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.search
 import org.example.collectorsapp.components.CollectionCard
 import org.example.collectorsapp.components.NewCollectionButton
 import org.example.collectorsapp.components.SearchBar
@@ -26,6 +25,7 @@ import org.example.collectorsapp.model.CollectionCategory
 import org.jetbrains.compose.resources.stringResource
 import kotlinproject.composeapp.generated.resources.button_new_collection
 import kotlinproject.composeapp.generated.resources.plus
+import org.example.collectorsapp.NavigationDestination
 
 val collectionList  = listOf(
     Collection(
@@ -34,7 +34,7 @@ val collectionList  = listOf(
         description = "Kolekcja kart pokemon. Zawiera karty z różnych edycji.Karty są w różnych stanach, " +
                 "od mint do damaged. Niektóre karty są bardzo rzadkie i mają dużą wartość.",
         imageBitmap = null,
-        category = CollectionCategory.CARDS,
+        category = CollectionCategory.Cards,
         items = emptyList()
     ),
     Collection(
@@ -43,7 +43,7 @@ val collectionList  = listOf(
         description = "Kolekcja zegarków. Zawiera zegarki z różnych edycji. Zegarki są w różnych stanach" +
                 "od mint do damaged. Niektóre zegarki są bardzo rzadkie i mają dużą wartość.",
         imageBitmap = null,
-        category = CollectionCategory.WATCHES,
+        category = CollectionCategory.Watches,
         items = emptyList()
     ),
     Collection(
@@ -52,7 +52,7 @@ val collectionList  = listOf(
         description = "Kolekcja monet. Zawiera monety z różnych edycji. Monety są w różnych stanach" +
                 "od mint do damaged. Niektóre monety są bardzo rzadkie i mają dużą wartość.",
         imageBitmap = null,
-        category = CollectionCategory.COINS,
+        category = CollectionCategory.Coins,
         items = emptyList()
     ),
     Collection(
@@ -60,7 +60,7 @@ val collectionList  = listOf(
         name = "Kolekcja instrumentów",
         description = "Kolekcja instrumentów",
         imageBitmap = null,
-        category = CollectionCategory.INSTRUMENTS,
+        category = CollectionCategory.Instruments,
         items = emptyList()
     ),
     Collection(
@@ -68,42 +68,41 @@ val collectionList  = listOf(
         name = "Kolekcja książek",
         description = "Kolekcja książek",
         imageBitmap = null,
-        category = CollectionCategory.BOOKS,
+        category = CollectionCategory.Books,
         items = emptyList()
     )
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsView(
-    navController: NavController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     var collectionList by remember { mutableStateOf(collectionList) }
     Box (modifier = modifier
         .fillMaxSize()
-        .padding(12.dp, 0.dp, 12.dp, 0.dp)
     ) {
-        Column(
+        LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
-
+            modifier = Modifier.padding(12.dp, 0.dp),
         ) {
-            SearchBar("", onValueChange = {
-                collectionList = searchCollections(it)
-            })
-            Spacer(modifier = Modifier.height(8.dp))
-            LazyColumn {
-                items(collectionList.size) { index ->
-                    CollectionCard(collection = collectionList[index])
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
+            item {
+                SearchBar("", onValueChange = {
+                    collectionList = searchCollections(it)
+                })
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            items(collectionList.size) { index ->
+                CollectionCard(collection = collectionList[index])
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
         NewCollectionButton(
             stringResource(Res.string.button_new_collection),
             Res.drawable.plus,
             onClick = {
-                navController.navigate("add_collection")
-            },
+                navController.navigate(NavigationDestination.AddCollectionView) },
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomEnd)
