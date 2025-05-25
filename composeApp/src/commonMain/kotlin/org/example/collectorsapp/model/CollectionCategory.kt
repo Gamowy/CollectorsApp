@@ -1,17 +1,17 @@
 package org.example.collectorsapp.model
 
 enum class CollectionCategory {
-    CARDS,
-    WATCHES,
-    COINS,
-    STAMPS,
-    TOYS,
-    ART,
-    BOOKS,
-    GAMES,
-    MUSIC,
-    MOVIES,
-    CLOTHES,
-    INSTRUMENTS,
-    OTHER
+    Cards,
+    Watches,
+    Coins,
+    Stamps,
+    Toys,
+    Art,
+    Books,
+    Games,
+    Music,
+    Movies,
+    Clothes,
+    Instruments,
+    Other
 }
