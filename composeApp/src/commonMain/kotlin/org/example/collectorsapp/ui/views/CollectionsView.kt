@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views.collectionsView
+package org.example.collectorsapp.ui.views
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -6,8 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +23,6 @@ import kotlinproject.composeapp.generated.resources.Res
 import org.example.collectorsapp.ui.components.CollectionCard
 import org.example.collectorsapp.ui.components.NewCollectionButton
 import org.example.collectorsapp.ui.components.SearchBar
-import org.example.collectorsapp.model.Collection
-import org.example.collectorsapp.model.CollectionCategory
 import org.jetbrains.compose.resources.stringResource
 import kotlinproject.composeapp.generated.resources.button_new_collection
 import kotlinproject.composeapp.generated.resources.plus
@@ -37,10 +36,12 @@ fun CollectionsView(
 ) {
     val collectionList by viewModel.collectionsList.collectAsState()
 
+    val listState = rememberLazyListState()
     Box (modifier = modifier
         .fillMaxSize()
     ) {
         LazyColumn(
+            state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(12.dp, 0.dp),
         ) {

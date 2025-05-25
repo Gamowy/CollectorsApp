@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views.settingsView
+package org.example.collectorsapp.ui.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

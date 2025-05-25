@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views.addCollectionView
+package org.example.collectorsapp.ui.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

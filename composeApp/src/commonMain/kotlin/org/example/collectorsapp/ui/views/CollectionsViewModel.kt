@@ -1,56 +1,51 @@
-package org.example.collectorsapp.ui.views.collectionsView
+package org.example.collectorsapp.ui.views
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.example.collectorsapp.model.Collection
+
 import org.example.collectorsapp.model.CollectionCategory
+import org.example.collectorsapp.model.ItemsCollection
 
 private val collectionList  = listOf(
-    Collection(
-        id = "1",
+    ItemsCollection(
+        collectionId = 1L,
         name = "Kolekcja pokemon",
         description = "Kolekcja kart pokemon. Zawiera karty z różnych edycji.Karty są w różnych stanach, " +
                 "od mint do damaged. Niektóre karty są bardzo rzadkie i mają dużą wartość.",
-        imageBitmap = null,
+        image = null,
         category = CollectionCategory.Cards,
-        items = emptyList()
     ),
-    Collection(
-        id = "2",
+    ItemsCollection(
+        collectionId = 2L,
         name = "Kolekcja zegarków",
         description = "Kolekcja zegarków. Zawiera zegarki z różnych edycji. Zegarki są w różnych stanach" +
                 "od mint do damaged. Niektóre zegarki są bardzo rzadkie i mają dużą wartość.",
-        imageBitmap = null,
+        image = null,
         category = CollectionCategory.Watches,
-        items = emptyList()
     ),
-    Collection(
-        id = "3",
+    ItemsCollection(
+        collectionId = 3L,
         name = "Kolekcja monet",
         description = "Kolekcja monet. Zawiera monety z różnych edycji. Monety są w różnych stanach" +
                 "od mint do damaged. Niektóre monety są bardzo rzadkie i mają dużą wartość.",
-        imageBitmap = null,
+        image = null,
         category = CollectionCategory.Coins,
-        items = emptyList()
     ),
-    Collection(
-        id = "4",
+    ItemsCollection(
+        collectionId = 4L,
         name = "Kolekcja instrumentów",
         description = "Kolekcja instrumentów",
-        imageBitmap = null,
+        image = null,
         category = CollectionCategory.Instruments,
-        items = emptyList()
     ),
-    Collection(
-        id = "5",
+    ItemsCollection(
+        collectionId = 5L,
         name = "Kolekcja książek",
         description = "Kolekcja książek",
-        imageBitmap = null,
+        image = null,
         category = CollectionCategory.Books,
-        items = emptyList()
     )
 )
 

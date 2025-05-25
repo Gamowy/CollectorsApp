@@ -32,13 +32,14 @@ import kotlinproject.composeapp.generated.resources.estimated_value
 import kotlinproject.composeapp.generated.resources.image_collection_description
 import kotlinproject.composeapp.generated.resources.not_available_description
 import kotlinproject.composeapp.generated.resources.placeholder
-import org.example.collectorsapp.model.Collection
+import org.example.collectorsapp.model.ItemsCollection
+import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CollectionCard(collection: Collection) {
-    val estimatedCollectionValue = collection.items.sumOf { it.estimatedValue ?: 0.0 }
+fun CollectionCard(collection: ItemsCollection) {
+    val estimatedCollectionValue = 0
 
     Card(
         modifier = Modifier
@@ -75,9 +76,9 @@ fun CollectionCard(collection: Collection) {
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier.fillMaxSize().weight(0.6f)
                 ) {
-                if (collection.imageBitmap != null) {
+                if (collection.image != null) {
                     Image(
-                        bitmap = collection.imageBitmap,
+                        bitmap  = byteArrayToImageBitmap(collection.image),
                         contentDescription = stringResource(Res.string.image_collection_description),
                         modifier = Modifier
                             .size(128.dp)

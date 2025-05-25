@@ -24,12 +24,12 @@ import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
 import org.example.collectorsapp.ui.theme.DarkColorScheme
 import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
-import org.example.collectorsapp.ui.views.collectionsView.CollectionsView
-import org.example.collectorsapp.ui.views.geminiView.GeminiView
-import org.example.collectorsapp.ui.views.settingsView.SettingsView
+import org.example.collectorsapp.ui.views.CollectionsView
+import org.example.collectorsapp.ui.views.GeminiView
+import org.example.collectorsapp.ui.views.SettingsView
 import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
-import org.example.collectorsapp.ui.views.addCollectionView.AddCollectionView
-import org.example.collectorsapp.ui.views.collectionsView.CollectionsViewModel
+import org.example.collectorsapp.ui.views.AddCollectionView
+import org.example.collectorsapp.ui.views.CollectionsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
