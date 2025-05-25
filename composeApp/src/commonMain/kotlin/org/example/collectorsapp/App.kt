@@ -13,22 +13,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import kotlinx.serialization.Serializable
-import org.example.collectorsapp.components.NavBar
-import org.example.collectorsapp.components.topbars.AddEditTopBar
-import org.example.collectorsapp.theme.DarkColorScheme
-import org.example.collectorsapp.theme.LightColorScheme
-import org.example.collectorsapp.theme.rippleConfiguration
-import org.example.collectorsapp.views.CollectionsView
-import org.example.collectorsapp.views.GeminiView
-import org.example.collectorsapp.views.SettingsView
-import org.example.collectorsapp.components.topbars.TitleOnlyTopBar
-import org.example.collectorsapp.views.AddCollectionView
-import org.jetbrains.compose.resources.stringResource
+import org.example.collectorsapp.ui.components.NavBar
+import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
+import org.example.collectorsapp.ui.theme.DarkColorScheme
+import org.example.collectorsapp.ui.theme.LightColorScheme
+import org.example.collectorsapp.ui.theme.rippleConfiguration
+import org.example.collectorsapp.ui.views.collectionsView.CollectionsView
+import org.example.collectorsapp.ui.views.geminiView.GeminiView
+import org.example.collectorsapp.ui.views.settingsView.SettingsView
+import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
+import org.example.collectorsapp.ui.views.addCollectionView.AddCollectionView
+import org.example.collectorsapp.ui.views.collectionsView.CollectionsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +42,6 @@ fun App() {
             val navController = rememberNavController()
             var showBottomAppBar by remember { mutableStateOf(true) }
             var topAppBarType by remember { mutableStateOf(TopAppBarType.TitleOnly) }
-
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
@@ -62,9 +62,11 @@ fun App() {
                     }
                 } },
             ) {
+                val collectionsViewModel = viewModel { CollectionsViewModel() }
+
                 val navGraph = navController.createGraph(startDestination = NavigationDestination.CollectionsView) {
                     composable<NavigationDestination.CollectionsView> {
-                        CollectionsView(navController)
+                        CollectionsView(navController = navController, viewModel = collectionsViewModel)
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }

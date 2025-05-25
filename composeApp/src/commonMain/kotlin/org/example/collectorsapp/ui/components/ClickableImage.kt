@@ -1,4 +1,4 @@
-package org.example.collectorsapp.components
+package org.example.collectorsapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

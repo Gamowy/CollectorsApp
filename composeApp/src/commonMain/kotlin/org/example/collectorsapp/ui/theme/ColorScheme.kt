@@ -1,4 +1,4 @@
-package org.example.collectorsapp.theme
+package org.example.collectorsapp.ui.theme
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RippleConfiguration

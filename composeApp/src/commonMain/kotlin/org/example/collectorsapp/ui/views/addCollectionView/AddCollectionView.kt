@@ -1,4 +1,4 @@
-package org.example.collectorsapp.views
+package org.example.collectorsapp.ui.views.addCollectionView
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,8 +34,8 @@ import androidx.navigation.NavHostController
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.cancel_button
 import kotlinproject.composeapp.generated.resources.placeholder
-import org.example.collectorsapp.components.ClickableImage
-import org.example.collectorsapp.components.SimpleDropdownMenu
+import org.example.collectorsapp.ui.components.ClickableImage
+import org.example.collectorsapp.ui.components.SimpleDropdownMenu
 import org.example.collectorsapp.model.CollectionCategory
 import org.jetbrains.compose.resources.stringResource
 import kotlinproject.composeapp.generated.resources.collection_image_text
