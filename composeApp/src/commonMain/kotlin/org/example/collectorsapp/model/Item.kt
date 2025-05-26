@@ -18,11 +18,11 @@ import androidx.room.PrimaryKey
 data class Item(
     @PrimaryKey(autoGenerate = true) val itemId: Long = 0L,
     @ColumnInfo(name = "collection_id", index = true) val collectionId: Long,
-    @ColumnInfo(name = "item_name") val name: String,
-    @ColumnInfo(name = "item_description") val description: String?,
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) val imageBitmap: ByteArray?,
-    @ColumnInfo(name = "item_value") val estimatedValue: Double?,
-    @ColumnInfo(name = "item_condition") val condition: Condition
+    @ColumnInfo(name = "item_name") var name: String,
+    @ColumnInfo(name = "item_description") var description: String?,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) var imageBitmap: ByteArray? = null,
+    @ColumnInfo(name = "item_value") var estimatedValue: Double? = null,
+    @ColumnInfo(name = "item_condition") var condition: Condition
 ) {
 
 }

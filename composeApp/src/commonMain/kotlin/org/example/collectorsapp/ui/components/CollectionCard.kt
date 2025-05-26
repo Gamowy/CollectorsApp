@@ -31,6 +31,7 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.estimated_value
 import kotlinproject.composeapp.generated.resources.image_collection_description
 import kotlinproject.composeapp.generated.resources.not_available_description
+import kotlinproject.composeapp.generated.resources.not_available_name
 import kotlinproject.composeapp.generated.resources.placeholder
 import org.example.collectorsapp.model.ItemsCollection
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
@@ -55,7 +56,7 @@ fun CollectionCard(collection: ItemsCollection) {
             )
             {
             Text(
-                text = collection.name,
+                text = collection.name.ifEmpty { stringResource(Res.string.not_available_name) },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
@@ -78,7 +79,7 @@ fun CollectionCard(collection: ItemsCollection) {
                 ) {
                 if (collection.image != null) {
                     Image(
-                        bitmap  = byteArrayToImageBitmap(collection.image),
+                        bitmap  = byteArrayToImageBitmap(collection.image!!),
                         contentDescription = stringResource(Res.string.image_collection_description),
                         modifier = Modifier
                             .size(128.dp)
@@ -96,7 +97,7 @@ fun CollectionCard(collection: ItemsCollection) {
                         ,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = collection.category.name,
+                    Text(text = collection.category.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,
@@ -108,7 +109,7 @@ fun CollectionCard(collection: ItemsCollection) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Box (modifier = Modifier.fillMaxSize()){
                     Text(
-                        text = collection.description
+                        text = collection.description?.ifEmpty { stringResource(Res.string.not_available_description) }
                             ?: stringResource(Res.string.not_available_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,

@@ -6,12 +6,14 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.internal.synchronized
 import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.model.ItemsCollection
 
 @Database(entities = [ItemsCollection::class, Item::class], version = 1, exportSchema = false)
 abstract class CollectionDatabase : RoomDatabase() {
     abstract fun getCollectionDao(): ItemsCollectionDao
+    abstract fun getItemDao(): ItemDao
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")

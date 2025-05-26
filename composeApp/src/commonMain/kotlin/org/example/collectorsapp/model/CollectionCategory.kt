@@ -1,6 +1,7 @@
 package org.example.collectorsapp.model
 
 enum class CollectionCategory {
+    Anything,
     Cards,
     Watches,
     Coins,

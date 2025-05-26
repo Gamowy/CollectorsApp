@@ -3,7 +3,8 @@
     <string name="app_name">Collectors App</string>
     <!-- CollectionCard -->
     <string name="image_collection_description">Collection Image</string>
-    <string name="not_available_description">No description available</string>
+    <string name="not_available_description">No description provided</string>
+    <string name="not_available_name">Unknown collection</string>
     <string name="estimated_value">Estimated value: $</string>
     <!-- FabButton -->
     <string name="add_collection">Add collection</string>
@@ -16,6 +17,7 @@
     <string name="string_icon">Icon</string>
     <!-- SearchBar -->
     <string name="search_bar_hint">Search for collection...</string>
+    <string name="search_bar_clear_hint">Clear searchbar</string>
     <string name="search_bar_icon_description">Search Icon</string>
     <!-- CollectionsView -->
     <string name="button_new_collection">New collection</string>

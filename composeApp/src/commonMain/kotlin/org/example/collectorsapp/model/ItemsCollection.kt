@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 @Entity
 data class ItemsCollection(
     @PrimaryKey(autoGenerate = true) val collectionId: Long = 0L,
-    @ColumnInfo(name = "collection_name") val name: String,
-    @ColumnInfo(name = "collection_description") val description: String?,
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) val image: ByteArray? = null,
-    @ColumnInfo(name = "collection_category")  val category: CollectionCategory
+    @ColumnInfo(name = "collection_name") var name: String,
+    @ColumnInfo(name = "collection_description") var description: String?,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) var image: ByteArray? = null,
+    @ColumnInfo(name = "collection_category")  var category: CollectionCategory
 ) {
 
 }

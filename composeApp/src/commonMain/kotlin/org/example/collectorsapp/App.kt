@@ -11,7 +11,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -19,21 +24,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import kotlinx.serialization.Serializable
+import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.ui.components.NavBar
 import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
+import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
 import org.example.collectorsapp.ui.theme.DarkColorScheme
 import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
+import org.example.collectorsapp.ui.views.AddCollectionView
 import org.example.collectorsapp.ui.views.CollectionsView
+import org.example.collectorsapp.ui.views.CollectionsViewModel
 import org.example.collectorsapp.ui.views.GeminiView
 import org.example.collectorsapp.ui.views.SettingsView
-import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
-import org.example.collectorsapp.ui.views.AddCollectionView
-import org.example.collectorsapp.ui.views.CollectionsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App() {
+fun App(repository: CollectionDatabase) {
     val darkTheme = isSystemInDarkTheme()
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
@@ -62,7 +68,7 @@ fun App() {
                     }
                 } },
             ) {
-                val collectionsViewModel = viewModel { CollectionsViewModel() }
+                val collectionsViewModel = viewModel { CollectionsViewModel(repository) }
 
                 val navGraph = navController.createGraph(startDestination = NavigationDestination.CollectionsView) {
                     composable<NavigationDestination.CollectionsView> {
@@ -81,7 +87,7 @@ fun App() {
                         topAppBarType = TopAppBarType.TitleOnly
                     }
                     composable<NavigationDestination.AddCollectionView> {
-                        AddCollectionView(navController)
+                        AddCollectionView(navController = navController, viewModel = collectionsViewModel)
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
                     }

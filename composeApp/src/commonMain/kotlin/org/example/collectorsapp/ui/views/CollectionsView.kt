@@ -30,7 +30,7 @@ import org.example.collectorsapp.NavigationDestination
 
 @Composable
 fun CollectionsView(
-    viewModel : CollectionsViewModel = viewModel { CollectionsViewModel() },
+    viewModel : CollectionsViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {

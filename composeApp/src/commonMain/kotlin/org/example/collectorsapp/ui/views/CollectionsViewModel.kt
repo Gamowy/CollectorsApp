@@ -1,9 +1,16 @@
 package org.example.collectorsapp.ui.views
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.example.collectorsapp.data.CollectionDatabase
 
 import org.example.collectorsapp.model.CollectionCategory
 import org.example.collectorsapp.model.ItemsCollection
@@ -49,11 +56,21 @@ private val collectionList  = listOf(
     )
 )
 
-class CollectionsViewModel: ViewModel() {
-    private var data = collectionList
+class CollectionsViewModel(private val repository: CollectionDatabase) : ViewModel() {
+    private var collectionDao = repository.getCollectionDao()
+    private var data : List<ItemsCollection> = emptyList()
 
     private var _collectionsList = MutableStateFlow(data)
-    val collectionsList = _collectionsList.asStateFlow()
+    val collectionsList = _collectionsList
+
+    init {
+        viewModelScope.launch {
+            collectionDao.getAllCollections().collectLatest { collections ->
+                data = collections
+                _collectionsList.value = data
+            }
+        }
+    }
 
     fun searchCollections(query: String): Unit {
         _collectionsList.update {
@@ -62,6 +79,12 @@ class CollectionsViewModel: ViewModel() {
                         collection.description?.contains(query, ignoreCase = true) == true ||
                         collection.category.name.contains(query, ignoreCase = true)
             }
+        }
+    }
+
+    fun addCollection(collection: ItemsCollection) {
+        viewModelScope.launch {
+            collectionDao.upsert(collection)
         }
     }
 }

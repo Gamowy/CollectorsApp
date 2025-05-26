@@ -46,12 +46,18 @@ import kotlinproject.composeapp.generated.resources.collection_description_label
 import kotlinproject.composeapp.generated.resources.input_placeholder
 import kotlinproject.composeapp.generated.resources.collection_dropdown_label
 import kotlinproject.composeapp.generated.resources.save_button
+import org.example.collectorsapp.model.ItemsCollection
 
 @Composable
-fun AddCollectionView(navController: NavHostController, modifier: Modifier = Modifier) {
+fun AddCollectionView(
+    viewModel: CollectionsViewModel,
+    navController: NavHostController,
+    modifier: Modifier = Modifier) {
+
     var collectionName by remember { mutableStateOf("") }
     var collectionDescription by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(CollectionCategory.entries[0].name) }
+    var collectionImage by remember { mutableStateOf<ByteArray?>(null) }
+    var collectionCategory by remember { mutableStateOf(CollectionCategory.Anything) }
 
     Box(
         modifier = modifier
@@ -125,7 +131,6 @@ fun AddCollectionView(navController: NavHostController, modifier: Modifier = Mod
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(4.dp)
-                        .background(Color.White)
                 )
             }
             Row(
@@ -144,7 +149,6 @@ fun AddCollectionView(navController: NavHostController, modifier: Modifier = Mod
                         .fillMaxWidth()
                         .height(150.dp)
                         .padding(4.dp)
-                        .background(Color.White)
                 )
             }
             Row(
@@ -155,12 +159,11 @@ fun AddCollectionView(navController: NavHostController, modifier: Modifier = Mod
                 SimpleDropdownMenu(
                     label = stringResource(Res.string.collection_dropdown_label),
                     options = CollectionCategory.entries.map { it.name },
-                    selectedOption = selectedCategory,
-                    onOptionSelected = { selectedCategory= it },
+                    selectedOption = collectionCategory.toString(),
+                    onOptionSelected = { collectionCategory = stringToCollectionCategory(it) },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(4.dp)
-                        .background(Color.White)
                 )
             }
             Row(horizontalArrangement = Arrangement.Center,
@@ -174,11 +177,29 @@ fun AddCollectionView(navController: NavHostController, modifier: Modifier = Mod
                     Text(text = stringResource(Res.string.cancel_button), style = MaterialTheme.typography.titleMedium)
                 }
                 TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
-                    onClick = { /*TODO: Handle save action*/ },
+                    onClick = {
+                        val collection = ItemsCollection(
+                            name = collectionName,
+                            description = collectionDescription,
+                            image = collectionImage,
+                            category = collectionCategory
+                        )
+                        viewModel.addCollection(collection)
+                        navController.popBackStack()
+                    },
                 ) {
                     Text(text = stringResource(Res.string.save_button), style = MaterialTheme.typography.titleMedium)
                 }
             }
         }
+    }
+}
+
+private fun stringToCollectionCategory(value: String): CollectionCategory {
+    return try {
+        CollectionCategory.valueOf(value)
+    }
+    catch  (e: IllegalArgumentException) {
+        CollectionCategory.Anything
     }
 }
