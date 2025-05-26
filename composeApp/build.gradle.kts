@@ -49,6 +49,7 @@ kotlin {
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.peekaboo.image.picker)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

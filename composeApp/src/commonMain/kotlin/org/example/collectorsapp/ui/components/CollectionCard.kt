@@ -81,6 +81,7 @@ fun CollectionCard(collection: ItemsCollection) {
                     Image(
                         bitmap  = byteArrayToImageBitmap(collection.image!!),
                         contentDescription = stringResource(Res.string.image_collection_description),
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(128.dp)
                             .clip(RoundedCornerShape(32.dp))
@@ -89,20 +90,20 @@ fun CollectionCard(collection: ItemsCollection) {
                     Image(
                         painter = painterResource(Res.drawable.placeholder),
                         contentDescription = stringResource(Res.string.image_collection_description),
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(128.dp)
                             .clip(RoundedCornerShape(32.dp))
                             .background(Color.White)
                         ,
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = collection.category.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.SemiBold,
-                        )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = collection.category.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.SemiBold,
+                )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Column (modifier = Modifier.fillMaxSize().weight(1f)) {

@@ -20,6 +20,7 @@ navigationComposeVersion = "2.9.0-beta01"
 room = "2.7.1"
 ksp = "2.1.21-2.0.1"
 sqlite = "2.5.1"
+peekaboo = "0.5.2"
 
 [libraries]
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
@@ -41,6 +42,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+peekaboo-image-picker = { module = "io.github.onseok:peekaboo-image-picker", version.ref = "peekaboo" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
