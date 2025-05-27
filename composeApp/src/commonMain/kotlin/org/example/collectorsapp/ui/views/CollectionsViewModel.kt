@@ -1,60 +1,14 @@
 package org.example.collectorsapp.ui.views
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.collectorsapp.data.CollectionDatabase
 
-import org.example.collectorsapp.model.CollectionCategory
 import org.example.collectorsapp.model.ItemsCollection
-
-private val collectionList  = listOf(
-    ItemsCollection(
-        collectionId = 1L,
-        name = "Kolekcja pokemon",
-        description = "Kolekcja kart pokemon. Zawiera karty z różnych edycji.Karty są w różnych stanach, " +
-                "od mint do damaged. Niektóre karty są bardzo rzadkie i mają dużą wartość.",
-        image = null,
-        category = CollectionCategory.Cards,
-    ),
-    ItemsCollection(
-        collectionId = 2L,
-        name = "Kolekcja zegarków",
-        description = "Kolekcja zegarków. Zawiera zegarki z różnych edycji. Zegarki są w różnych stanach" +
-                "od mint do damaged. Niektóre zegarki są bardzo rzadkie i mają dużą wartość.",
-        image = null,
-        category = CollectionCategory.Watches,
-    ),
-    ItemsCollection(
-        collectionId = 3L,
-        name = "Kolekcja monet",
-        description = "Kolekcja monet. Zawiera monety z różnych edycji. Monety są w różnych stanach" +
-                "od mint do damaged. Niektóre monety są bardzo rzadkie i mają dużą wartość.",
-        image = null,
-        category = CollectionCategory.Coins,
-    ),
-    ItemsCollection(
-        collectionId = 4L,
-        name = "Kolekcja instrumentów",
-        description = "Kolekcja instrumentów",
-        image = null,
-        category = CollectionCategory.Instruments,
-    ),
-    ItemsCollection(
-        collectionId = 5L,
-        name = "Kolekcja książek",
-        description = "Kolekcja książek",
-        image = null,
-        category = CollectionCategory.Books,
-    )
-)
 
 class CollectionsViewModel(private val repository: CollectionDatabase) : ViewModel() {
     private var collectionDao = repository.getCollectionDao()
@@ -82,9 +36,20 @@ class CollectionsViewModel(private val repository: CollectionDatabase) : ViewMod
         }
     }
 
-    fun addCollection(collection: ItemsCollection) {
+    fun upsertCollection(collection: ItemsCollection) {
         viewModelScope.launch {
             collectionDao.upsert(collection)
         }
+    }
+
+    fun deleteCollectionById(collectionId: Long) {
+        viewModelScope.launch {
+            val collection = collectionDao.getCollectionById(collectionId)
+            collectionDao.delete(collection)
+        }
+    }
+
+    fun getCollectionById(collectionId: Long): ItemsCollection? {
+        return data.find { it.collectionId == collectionId }
     }
 }

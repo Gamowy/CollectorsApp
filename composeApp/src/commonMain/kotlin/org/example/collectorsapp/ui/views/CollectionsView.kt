@@ -8,30 +8,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.button_new_collection
+import kotlinproject.composeapp.generated.resources.plus
+import org.example.collectorsapp.NavigationDestination
 import org.example.collectorsapp.ui.components.CollectionCard
 import org.example.collectorsapp.ui.components.NewCollectionButton
 import org.example.collectorsapp.ui.components.SearchBar
 import org.jetbrains.compose.resources.stringResource
-import kotlinproject.composeapp.generated.resources.button_new_collection
-import kotlinproject.composeapp.generated.resources.plus
-import org.example.collectorsapp.NavigationDestination
 
 @Composable
 fun CollectionsView(
     viewModel : CollectionsViewModel,
-    navController: NavHostController,
+    navHost: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val collectionList by viewModel.collectionsList.collectAsState()
@@ -52,7 +47,10 @@ fun CollectionsView(
                 Spacer(modifier = Modifier.height(8.dp))
             }
             items(collectionList.size) { index ->
-                CollectionCard(collection = collectionList[index])
+                val collection = collectionList[index]
+                CollectionCard(collection = collection, onClick = {
+                    navHost.navigate(NavigationDestination.CollectionDetailView(collection.collectionId))
+                })
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }
@@ -60,7 +58,7 @@ fun CollectionsView(
             stringResource(Res.string.button_new_collection),
             Res.drawable.plus,
             onClick = {
-                navController.navigate(NavigationDestination.AddCollectionView) },
+                navHost.navigate(NavigationDestination.AddEditCollectionView) },
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomEnd)

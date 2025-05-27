@@ -2,6 +2,7 @@ package org.example.collectorsapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,13 +40,18 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CollectionCard(collection: ItemsCollection) {
+fun CollectionCard(
+    collection: ItemsCollection,
+    onClick: () -> Unit
+) {
     val estimatedCollectionValue = 0
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .height(200.dp)
+            .clickable {
+                onClick()
+            },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row (modifier = Modifier

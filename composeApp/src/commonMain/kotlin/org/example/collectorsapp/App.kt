@@ -23,15 +23,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.ui.components.NavBar
 import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
+import org.example.collectorsapp.ui.components.topbars.DetailTopBar
 import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
 import org.example.collectorsapp.ui.theme.DarkColorScheme
 import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
-import org.example.collectorsapp.ui.views.AddCollectionView
+import org.example.collectorsapp.ui.views.AddEditCollectionView
+import org.example.collectorsapp.ui.views.CollectionDetailView
 import org.example.collectorsapp.ui.views.CollectionsView
 import org.example.collectorsapp.ui.views.CollectionsViewModel
 import org.example.collectorsapp.ui.views.GeminiView
@@ -47,7 +50,11 @@ fun App(repository: CollectionDatabase) {
         CompositionLocalProvider(LocalRippleConfiguration provides rippleConfiguration) {
             val navController = rememberNavController()
             var showBottomAppBar by remember { mutableStateOf(true) }
+
             var topAppBarType by remember { mutableStateOf(TopAppBarType.TitleOnly) }
+            var editAction: () -> Unit = {}
+            var deleteAction: () -> Unit = {}
+
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
@@ -60,6 +67,9 @@ fun App(repository: CollectionDatabase) {
                         TopAppBarType.AddEdit -> {
                             AddEditTopBar(navController)
                         }
+                        TopAppBarType.DetailTopBar -> {
+                            DetailTopBar(navController, editAction, deleteAction)
+                        }
                     }
                 },
                 bottomBar = { if (showBottomAppBar) {
@@ -67,12 +77,12 @@ fun App(repository: CollectionDatabase) {
                         NavBar(navController)
                     }
                 } },
-            ) {
+            ) { it ->
                 val collectionsViewModel = viewModel { CollectionsViewModel(repository) }
 
                 val navGraph = navController.createGraph(startDestination = NavigationDestination.CollectionsView) {
                     composable<NavigationDestination.CollectionsView> {
-                        CollectionsView(navController = navController, viewModel = collectionsViewModel)
+                        CollectionsView(navHost = navController, viewModel = collectionsViewModel)
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
@@ -86,10 +96,30 @@ fun App(repository: CollectionDatabase) {
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
-                    composable<NavigationDestination.AddCollectionView> {
-                        AddCollectionView(navController = navController, viewModel = collectionsViewModel)
+                    composable<NavigationDestination.AddEditCollectionView> {
+                        val args = it.toRoute<NavigationDestination.AddEditCollectionView>()
+                        AddEditCollectionView(
+                            collectionId = args.collectionId,
+                            navHost = navController,
+                            viewModel = collectionsViewModel)
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
+                    }
+                    composable<NavigationDestination.CollectionDetailView> { it ->
+                        val args = it.toRoute<NavigationDestination.CollectionDetailView>()
+                        CollectionDetailView(
+                            collectionId = args.collectionId,
+                            navHost = navController,
+                            viewModel = collectionsViewModel
+                        )
+                        showBottomAppBar = true
+                        topAppBarType = TopAppBarType.DetailTopBar
+                        deleteAction = {
+                            collectionsViewModel.deleteCollectionById(args.collectionId)
+                        }
+                        editAction = {
+                            navController.navigate(NavigationDestination.AddEditCollectionView(args.collectionId))
+                        }
                     }
                 }
                 NavHost(
@@ -111,10 +141,13 @@ object NavigationDestination {
     @Serializable
     object SettingsView
     @Serializable
-    object AddCollectionView
+    data class AddEditCollectionView(val collectionId: Long? = null)
+    @Serializable
+    data class CollectionDetailView(val collectionId: Long)
 }
 
-enum class TopAppBarType {
+enum class TopAppBarType() {
     TitleOnly,
-    AddEdit
+    AddEdit,
+    DetailTopBar
 }
