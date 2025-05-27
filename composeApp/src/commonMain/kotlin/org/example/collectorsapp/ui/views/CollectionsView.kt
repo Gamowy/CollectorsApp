@@ -58,7 +58,7 @@ fun CollectionsView(
             stringResource(Res.string.button_new_collection),
             Res.drawable.plus,
             onClick = {
-                navHost.navigate(NavigationDestination.AddEditCollectionView) },
+                navHost.navigate(NavigationDestination.AddEditCollectionView()) },
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomEnd)
