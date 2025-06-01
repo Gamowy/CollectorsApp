@@ -33,12 +33,12 @@ import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
 import org.example.collectorsapp.ui.theme.DarkColorScheme
 import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
-import org.example.collectorsapp.ui.views.AddEditCollectionView
+import org.example.collectorsapp.ui.views.collections.AddEditCollectionView
 import org.example.collectorsapp.ui.views.CollectionDetailView
-import org.example.collectorsapp.ui.views.CollectionsView
-import org.example.collectorsapp.ui.views.CollectionsViewModel
-import org.example.collectorsapp.ui.views.GeminiView
-import org.example.collectorsapp.ui.views.SettingsView
+import org.example.collectorsapp.ui.views.collections.CollectionsView
+import org.example.collectorsapp.ui.views.collections.CollectionsListViewModel
+import org.example.collectorsapp.ui.views.gemini.GeminiView
+import org.example.collectorsapp.ui.views.settings.SettingsView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,9 +52,8 @@ fun App(repository: CollectionDatabase) {
             var showBottomAppBar by remember { mutableStateOf(true) }
 
             var topAppBarType by remember { mutableStateOf(TopAppBarType.TitleOnly) }
-            var editAction: () -> Unit = {}
-            var deleteAction: () -> Unit = {}
-
+            var editAction by remember { mutableStateOf({})}
+            var deleteAction by remember { mutableStateOf({})}
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
@@ -68,7 +67,11 @@ fun App(repository: CollectionDatabase) {
                             AddEditTopBar(navController)
                         }
                         TopAppBarType.DetailTopBar -> {
-                            DetailTopBar(navController, editAction, deleteAction)
+                            DetailTopBar(
+                                onBack = { navController.popBackStack() },
+                                onEdit = editAction,
+                                onDelete = deleteAction
+                            )
                         }
                     }
                 },
@@ -78,11 +81,20 @@ fun App(repository: CollectionDatabase) {
                     }
                 } },
             ) { it ->
-                val collectionsViewModel = viewModel { CollectionsViewModel(repository) }
+                val collectionsViewModel = viewModel { CollectionsListViewModel(repository) }
 
                 val navGraph = navController.createGraph(startDestination = NavigationDestination.CollectionsView) {
+                    // Bottom navigation destinations
                     composable<NavigationDestination.CollectionsView> {
-                        CollectionsView(navHost = navController, viewModel = collectionsViewModel)
+                        CollectionsView(
+                            viewModel = collectionsViewModel,
+                            onCollectionClick = { id ->
+                                navController.navigate(NavigationDestination.CollectionDetailView(id))
+                            },
+                            onAddClick = {
+                                navController.navigate(NavigationDestination.AddEditCollectionView())
+                            }
+                        )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
@@ -96,21 +108,24 @@ fun App(repository: CollectionDatabase) {
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
+
+                    // Collections destinations
                     composable<NavigationDestination.AddEditCollectionView> {
                         val args = it.toRoute<NavigationDestination.AddEditCollectionView>()
                         AddEditCollectionView(
                             collectionId = args.collectionId,
-                            navHost = navController,
-                            viewModel = collectionsViewModel)
+                            viewModel = collectionsViewModel,
+                            onBack = { navController.popBackStack() }
+                        )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
                     }
-                    composable<NavigationDestination.CollectionDetailView> { it ->
+                    composable<NavigationDestination.CollectionDetailView> {
                         val args = it.toRoute<NavigationDestination.CollectionDetailView>()
                         CollectionDetailView(
                             collectionId = args.collectionId,
-                            navHost = navController,
-                            viewModel = collectionsViewModel
+                            viewModel = collectionsViewModel,
+                            onBack = { navController.popBackStack() },
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.DetailTopBar
@@ -146,7 +161,7 @@ object NavigationDestination {
     data class CollectionDetailView(val collectionId: Long)
 }
 
-enum class TopAppBarType() {
+enum class TopAppBarType {
     TitleOnly,
     AddEdit,
     DetailTopBar

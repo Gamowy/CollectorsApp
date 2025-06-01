@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views
+package org.example.collectorsapp.ui.views.collections
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -6,18 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.button_new_collection
 import kotlinproject.composeapp.generated.resources.plus
-import org.example.collectorsapp.NavigationDestination
 import org.example.collectorsapp.ui.components.CollectionCard
 import org.example.collectorsapp.ui.components.NewCollectionButton
 import org.example.collectorsapp.ui.components.SearchBar
@@ -25,32 +22,34 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CollectionsView(
-    viewModel : CollectionsViewModel,
-    navHost: NavHostController,
+    viewModel : CollectionsListViewModel,
+    onCollectionClick: (Long) -> Unit,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val collectionList by viewModel.collectionsList.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val listState = rememberLazyListState()
     Box (modifier = modifier
         .fillMaxSize()
     ) {
         LazyColumn(
-            state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(12.dp, 0.dp),
         ) {
             item {
-                SearchBar("", onValueChange = {
+                SearchBar(state.searchQuery, onValueChange = {
                     viewModel.searchCollections(it)
                 })
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            items(collectionList.size) { index ->
-                val collection = collectionList[index]
-                CollectionCard(collection = collection, onClick = {
-                    navHost.navigate(NavigationDestination.CollectionDetailView(collection.collectionId))
-                })
+            items(state.searchResultsList.size) { index ->
+                val collectionState = state.searchResultsList[index]
+                CollectionCard(
+                    collection = collectionState.collection,
+                    collectionValue = collectionState.collectionValue,
+                    onClick = { onCollectionClick(collectionState.collection.collectionId) },
+                    modifier = Modifier.animateItem()
+                )
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }
@@ -58,7 +57,8 @@ fun CollectionsView(
             stringResource(Res.string.button_new_collection),
             Res.drawable.plus,
             onClick = {
-                navHost.navigate(NavigationDestination.AddEditCollectionView()) },
+                onAddClick()
+            },
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomEnd)

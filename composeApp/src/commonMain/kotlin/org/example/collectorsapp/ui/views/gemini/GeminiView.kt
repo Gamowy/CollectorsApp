@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views
+package org.example.collectorsapp.ui.views.gemini
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

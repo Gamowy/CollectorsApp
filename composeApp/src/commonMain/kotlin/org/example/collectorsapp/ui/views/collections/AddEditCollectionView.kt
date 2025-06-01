@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views
+package org.example.collectorsapp.ui.views.collections
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.preat.peekaboo.image.picker.SelectionMode
 import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
@@ -54,7 +53,7 @@ import kotlinproject.composeapp.generated.resources.save_button
 import org.example.collectorsapp.model.CollectionCategory
 import org.example.collectorsapp.model.ItemsCollection
 import org.example.collectorsapp.ui.components.ClickableImage
-import org.example.collectorsapp.ui.components.SimpleDropdownMenu
+import org.example.collectorsapp.ui.components.DropdownMenu
 import org.example.collectorsapp.utils.encodeToPngBytes
 import org.jetbrains.compose.resources.stringResource
 
@@ -62,8 +61,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AddEditCollectionView(
     collectionId: Long? = null,
-    viewModel: CollectionsViewModel,
-    navHost: NavHostController,
+    viewModel: CollectionsListViewModel,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier) {
 
     var collectionName by remember { mutableStateOf("") }
@@ -74,15 +73,15 @@ fun AddEditCollectionView(
     val editCollectionId by remember { mutableStateOf(collectionId) }
     LaunchedEffect(editCollectionId) {
         if (editCollectionId != null) {
-            val collection = viewModel.getCollectionById(editCollectionId!!)
-            if (collection != null) {
-                collectionName = collection.name
-                collectionDescription = collection.description ?: ""
-                collectionImage = collection.image
-                collectionCategory = collection.category
+            val state = viewModel.getCollectionById(editCollectionId!!)
+            if (state != null) {
+                collectionName = state.collection.name
+                collectionDescription = state.collection.description ?: ""
+                collectionImage = state.collection.image
+                collectionCategory = state.collection.category
             }
             else {
-                navHost.popBackStack()
+                onBack()
             }
         }
     }
@@ -222,7 +221,7 @@ fun AddEditCollectionView(
                     .fillMaxWidth()
                     .padding(4.dp)
             ) {
-                SimpleDropdownMenu(
+                DropdownMenu(
                     label = stringResource(Res.string.collection_dropdown_label),
                     options = CollectionCategory.entries.map { it.name },
                     selectedOption = collectionCategory.toString(),
@@ -238,7 +237,7 @@ fun AddEditCollectionView(
                 .padding(4.dp))
             {
                 TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
-                    onClick = { navHost.popBackStack() },
+                    onClick = { onBack() },
                 ) {
                     Text(text = stringResource(Res.string.cancel_button), style = MaterialTheme.typography.titleMedium)
                 }
@@ -253,7 +252,7 @@ fun AddEditCollectionView(
                             category = collectionCategory
                         )
                         viewModel.upsertCollection(collection)
-                        navHost.popBackStack()
+                        onBack()
                     },
                 ) {
                     Text(text = stringResource(Res.string.save_button), style = MaterialTheme.typography.titleMedium)

@@ -42,11 +42,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun CollectionCard(
     collection: ItemsCollection,
-    onClick: () -> Unit
+    collectionValue: Double,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val estimatedCollectionValue = 0
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
             .clickable {
@@ -124,7 +125,7 @@ fun CollectionCard(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "${stringResource(Res.string.estimated_value)}${estimatedCollectionValue}",
+                        text = "${stringResource(Res.string.estimated_value)}${collectionValue}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,

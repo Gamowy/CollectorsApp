@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailTopBar(
-    navHost: NavHostController,
+    onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -57,7 +57,7 @@ fun DetailTopBar(
             onConfirm = {
                 showAlertDialog = false
                 onDelete()
-                navHost.popBackStack()
+                onBack()
             })
     }
     CenterAlignedTopAppBar(
@@ -72,7 +72,7 @@ fun DetailTopBar(
         navigationIcon = {
             IconButton(
                 onClick = {
-                    navHost.popBackStack()
+                    onBack()
                 },
                 content = {
                     Icon(

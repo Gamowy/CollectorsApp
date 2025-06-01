@@ -7,7 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleDropdownMenu(
+fun DropdownMenu(
     label: String,
     options: List<String>,
     selectedOption: String,

@@ -23,7 +23,7 @@
     <string name="button_new_collection">New collection</string>
     <!-- AddCollectionView -->
     <string name="collection_image_text">Collection image</string>
-    <string name="collection_image_subtext">Pick an image to show off your collection</string>
+    <string name="collection_image_subtext">Pick an image to represent your collection</string>
     <string name="collection_image_description">Add Collection Image</string>
     <string name="collection_text_description">Collection details</string>
     <string name="collection_name_label_input">Collection name</string>
