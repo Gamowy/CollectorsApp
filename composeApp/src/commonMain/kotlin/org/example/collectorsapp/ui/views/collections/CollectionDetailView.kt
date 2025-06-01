@@ -2,25 +2,39 @@ package org.example.collectorsapp.ui.views.collections
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,6 +50,7 @@ import kotlinproject.composeapp.generated.resources.not_available_name
 import kotlinproject.composeapp.generated.resources.placeholder
 import kotlinproject.composeapp.generated.resources.plus
 import org.example.collectorsapp.ui.components.FabButton
+import org.example.collectorsapp.ui.components.ItemCard
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -48,11 +63,17 @@ fun CollectionDetailView(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Column {
+    Box(modifier = modifier
+        .fillMaxSize()
+    ) {
+        Column(modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+        ) {
             Card(modifier = modifier
                 .fillMaxWidth()
-                .height(200.dp),
+                .wrapContentHeight(unbounded = true)
+                .height(150.dp),
                 elevation = CardDefaults.cardElevation(4.dp)) {
                 Box {
                     if(state.collection.image != null) {
@@ -129,17 +150,34 @@ fun CollectionDetailView(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(unbounded = true)
+                    .height(LocalWindowInfo.current.containerSize.height.dp*0.25f)
             ) {
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(text = stringResource(Res.string.items_in_collection),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(8.dp)
                 )
+                LazyHorizontalGrid(
+                    rows = GridCells.FixedSize(150.dp),
+                    contentPadding = PaddingValues(4.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    items(state.items.size) { index ->
+                        val item = state.items[index]
+                        ItemCard(
+                            item = item,
+                            onClick = {},
+                        )
+                    }
+                }
+
             }
         }
         FabButton(

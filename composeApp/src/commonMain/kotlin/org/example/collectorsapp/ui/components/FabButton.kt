@@ -1,6 +1,8 @@
 package org.example.collectorsapp.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +31,9 @@ fun FabButton(
         onClick = { onClick() },
         contentColor = Color.Black
     ) {
-        Row (verticalAlignment = Alignment.CenterVertically){
+        Row (
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically){
             Icon(
                 painter = painterResource(icon),
                 contentDescription = text,

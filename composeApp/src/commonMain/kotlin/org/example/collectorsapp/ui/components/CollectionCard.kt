@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.estimated_value
 import kotlinproject.composeapp.generated.resources.image_collection_description
+import kotlinproject.composeapp.generated.resources.item_card_image_description
 import kotlinproject.composeapp.generated.resources.not_available_description
 import kotlinproject.composeapp.generated.resources.not_available_name
 import kotlinproject.composeapp.generated.resources.placeholder
@@ -43,16 +44,13 @@ import org.jetbrains.compose.resources.stringResource
 fun CollectionCard(
     collection: ItemsCollection,
     collectionValue: Double,
-    onClick: (() -> Unit)? = null,
+    onClick: (() -> Unit),
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier
+    Card(modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .clickable(enabled = (onClick != null)) {
-                onClick!!()
-            },
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row (modifier = Modifier
@@ -87,7 +85,7 @@ fun CollectionCard(
                 if (collection.image != null) {
                     Image(
                         bitmap  = byteArrayToImageBitmap(collection.image!!),
-                        contentDescription = stringResource(Res.string.image_collection_description),
+                        contentDescription = stringResource(Res.string.item_card_image_description),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(128.dp)

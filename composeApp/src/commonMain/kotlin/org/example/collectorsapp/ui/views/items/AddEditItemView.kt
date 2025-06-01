@@ -261,7 +261,7 @@ fun AddEditItemView(
                 TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
                     enabled = itemName.isNotBlank(),
                     onClick = {
-                        val estimatedValue = itemEstimatedValue?.toDouble() ?: 0.0
+                        val estimatedValue = stringToDouble(itemEstimatedValue ?: "")
                         val item = Item(
                             itemId = editItemId ?: 0L,
                             collectionId = collectionId,
@@ -288,5 +288,13 @@ private fun stringToItemCondition(value: String): Condition {
     }
     catch  (e: IllegalArgumentException) {
         Condition.New
+    }
+}
+
+private fun stringToDouble(value: String): Double {
+    return try {
+        value.toDouble()
+    } catch (e: NumberFormatException) {
+        0.0
     }
 }
