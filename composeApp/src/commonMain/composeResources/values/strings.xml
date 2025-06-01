@@ -37,4 +37,16 @@
     <string name="edit_collection">Edit collection</string>
     <string name="delete_collection">Delete collection</string>
     <string name="delete_collection_confirmation">Are you sure you want to delete this collection?</string>
+    <string name="items_in_collection">Items in this collection</string>
+    <string name="add_item">Add item</string>
+    <string name="item_image_text">Item image</string>
+    <string name="item_image_subtext">Pick an image of your item</string>
+    <string name="item_image_description">Add Item Image</string>
+    <string name="item_text_description">Item details</string>
+    <string name="item_name_label_input">Item name</string>
+    <string name="item_description_label_input">Item description</string>
+    <string name="item_value_label_input">Item value</string>
+    <string name="item_dropdown_label">Condition</string>
+    <string name="button_create_item">Create item</string>
+    <string name="category_label">Category: </string>
 </resources>

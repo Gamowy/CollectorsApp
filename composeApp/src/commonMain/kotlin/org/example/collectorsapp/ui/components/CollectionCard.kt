@@ -43,15 +43,15 @@ import org.jetbrains.compose.resources.stringResource
 fun CollectionCard(
     collection: ItemsCollection,
     collectionValue: Double,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .clickable {
-                onClick()
+            .clickable(enabled = (onClick != null)) {
+                onClick!!()
             },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -125,7 +125,10 @@ fun CollectionCard(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "${stringResource(Res.string.estimated_value)}${collectionValue}",
+                        text = "${stringResource(Res.string.estimated_value)}${collectionValue.let {
+                            if (it > 0) "$it"
+                            else "0"
+                        }}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,

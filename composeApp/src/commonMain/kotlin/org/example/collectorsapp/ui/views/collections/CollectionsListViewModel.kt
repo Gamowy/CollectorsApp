@@ -22,12 +22,12 @@ class CollectionsListViewModel(private val repository: CollectionDatabase) : Vie
         viewModelScope.launch {
             collectionDao.getAllCollections().collectLatest { collections ->
                 val list = collections.map { collection ->
-                    CollectionState(collection, getCollectionValue(collection.collectionId))
+                    CollectionCardState(collection, getCollectionValue(collection.collectionId))
                 }
                 _state.update {
                     it.copy(
                         collectionsList = list,
-                        searchQuery = "",
+                        searchQuery = it.searchQuery,
                         searchResultsList = list
                     )
                 }
@@ -48,7 +48,7 @@ class CollectionsListViewModel(private val repository: CollectionDatabase) : Vie
         }
     }
 
-    fun getCollectionById(collectionId: Long): CollectionState? {
+    fun getCollectionById(collectionId: Long): CollectionCardState? {
         return _state.value.collectionsList.find { it.collection.collectionId == collectionId }
     }
 
@@ -57,10 +57,10 @@ class CollectionsListViewModel(private val repository: CollectionDatabase) : Vie
             it.copy (
                 collectionsList = it.collectionsList,
                 searchQuery = query,
-                searchResultsList = it.collectionsList.filter { collectionState ->
-                    collectionState.collection.name.contains(query, ignoreCase = true) ||
-                            collectionState.collection.description?.contains(query, ignoreCase = true) == true ||
-                            collectionState.collection.category.name.contains(query, ignoreCase = true)
+                searchResultsList = it.collectionsList.filter { cardState ->
+                    cardState.collection.name.contains(query, ignoreCase = true) ||
+                            cardState.collection.description?.contains(query, ignoreCase = true) == true ||
+                            cardState.collection.category.name.contains(query, ignoreCase = true)
                 }
             )
         }

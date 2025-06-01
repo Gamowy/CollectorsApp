@@ -16,7 +16,7 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.button_new_collection
 import kotlinproject.composeapp.generated.resources.plus
 import org.example.collectorsapp.ui.components.CollectionCard
-import org.example.collectorsapp.ui.components.NewCollectionButton
+import org.example.collectorsapp.ui.components.FabButton
 import org.example.collectorsapp.ui.components.SearchBar
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,7 +34,6 @@ fun CollectionsView(
     ) {
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(12.dp, 0.dp),
         ) {
             item {
                 SearchBar(state.searchQuery, onValueChange = {
@@ -52,15 +51,18 @@ fun CollectionsView(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
+            item {
+                Spacer(modifier = Modifier.height(64.dp))
+            }
         }
-        NewCollectionButton(
+        FabButton(
             stringResource(Res.string.button_new_collection),
             Res.drawable.plus,
             onClick = {
                 onAddClick()
             },
             modifier = Modifier
-                .padding(12.dp)
+                .padding(bottom = 12.dp)
                 .align(Alignment.BottomEnd)
         )
     }

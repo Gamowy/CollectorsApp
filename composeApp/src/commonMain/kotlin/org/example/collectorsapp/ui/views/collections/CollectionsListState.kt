@@ -1,9 +1,7 @@
 package org.example.collectorsapp.ui.views.collections
 
-import org.example.collectorsapp.model.ItemsCollection
-
 data class CollectionsListState(
-    val collectionsList: List<CollectionState> = emptyList(),
+    val collectionsList: List<CollectionCardState> = emptyList(),
     val searchQuery: String = "",
-    val searchResultsList: List<CollectionState> = emptyList(),
+    val searchResultsList: List<CollectionCardState> = emptyList(),
 )

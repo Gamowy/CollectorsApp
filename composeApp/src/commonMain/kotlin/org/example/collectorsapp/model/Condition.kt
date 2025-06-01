@@ -2,9 +2,9 @@ package org.example.collectorsapp.model
 
 enum class Condition {
     New,
-    LikeNew,
-    Goo,
+    Excellent,
+    Good,
     Fair,
     Poor,
-    Damaged
+    Damaged,
 }

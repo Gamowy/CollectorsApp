@@ -19,7 +19,11 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NewCollectionButton(text: String, icon: DrawableResource, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun FabButton(
+    text: String,
+    icon: DrawableResource,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier) {
     ExtendedFloatingActionButton(
         modifier = modifier,
         onClick = { onClick() },
@@ -31,7 +35,7 @@ fun NewCollectionButton(text: String, icon: DrawableResource, onClick: () -> Uni
                 contentDescription = text,
                 tint = Color.Black
             )
-            Text(stringResource(Res.string.add_collection), style = MaterialTheme.typography.labelMedium)
+            Text(text, style = MaterialTheme.typography.labelMedium)
         }
     }
 }

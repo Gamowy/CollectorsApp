@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views.collections
+package org.example.collectorsapp.ui.views.items
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -36,53 +35,58 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.preat.peekaboo.image.picker.SelectionMode
 import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.cancel_button
-import kotlinproject.composeapp.generated.resources.collection_description_label_input
-import kotlinproject.composeapp.generated.resources.collection_dropdown_label
-import kotlinproject.composeapp.generated.resources.collection_image_description
-import kotlinproject.composeapp.generated.resources.collection_image_subtext
-import kotlinproject.composeapp.generated.resources.collection_image_text
-import kotlinproject.composeapp.generated.resources.collection_name_label_input
-import kotlinproject.composeapp.generated.resources.collection_text_description
 import kotlinproject.composeapp.generated.resources.input_placeholder
+import kotlinproject.composeapp.generated.resources.item_description_label_input
+import kotlinproject.composeapp.generated.resources.item_dropdown_label
+import kotlinproject.composeapp.generated.resources.item_image_description
+import kotlinproject.composeapp.generated.resources.item_image_subtext
+import kotlinproject.composeapp.generated.resources.item_image_text
+import kotlinproject.composeapp.generated.resources.item_name_label_input
+import kotlinproject.composeapp.generated.resources.item_text_description
+import kotlinproject.composeapp.generated.resources.item_value_label_input
 import kotlinproject.composeapp.generated.resources.placeholder
 import kotlinproject.composeapp.generated.resources.save_button
-import org.example.collectorsapp.model.CollectionCategory
-import org.example.collectorsapp.model.ItemsCollection
+import org.example.collectorsapp.model.Condition
+import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.ui.components.ClickableImage
 import org.example.collectorsapp.ui.components.DropdownMenu
-import org.example.collectorsapp.utils.encodeToPngBytes
+import org.example.collectorsapp.ui.views.collections.CollectionDetailViewModel
 import org.example.collectorsapp.utils.processImage
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
-fun AddEditCollectionView(
-    collectionId: Long? = null,
-    viewModel: CollectionsListViewModel,
+fun AddEditItemView(
+    collectionId: Long,
+    itemId: Long? = null,
+    viewModel: CollectionDetailViewModel,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
+    var itemName by remember { mutableStateOf("") }
+    var itemDescription by remember { mutableStateOf("") }
+    var itemImage by remember { mutableStateOf<ByteArray?>(null) }
+    var itemCondition by remember { mutableStateOf(Condition.New) }
+    var itemEstimatedValue by remember { mutableStateOf<String?>("") }
 
-    var collectionName by remember { mutableStateOf("") }
-    var collectionDescription by remember { mutableStateOf("") }
-    var collectionImage by remember { mutableStateOf<ByteArray?>(null) }
-    var collectionCategory by remember { mutableStateOf(CollectionCategory.Anything) }
-
-    val editCollectionId by remember { mutableStateOf(collectionId) }
-    LaunchedEffect(editCollectionId) {
-        if (editCollectionId != null) {
-            val state = viewModel.getCollectionById(editCollectionId!!)
-            if (state != null) {
-                collectionName = state.collection.name
-                collectionDescription = state.collection.description ?: ""
-                collectionImage = state.collection.image
-                collectionCategory = state.collection.category
+    val editItemId by remember { mutableStateOf(itemId) }
+    LaunchedEffect(editItemId) {
+        if (editItemId != null) {
+            val item = viewModel.getItemById(itemId!!)
+            if (item != null) {
+                itemName = item.name
+                itemDescription = item.description ?: ""
+                itemImage = item.imageBitmap
+                itemCondition = item.condition
+                itemEstimatedValue = item.estimatedValue.toString()
             }
             else {
                 onBack()
@@ -96,7 +100,7 @@ fun AddEditCollectionView(
         scope = scope,
         onResult = { byteArrays ->
             byteArrays.firstOrNull()?.let {
-                collectionImage = processImage(it)
+                itemImage = processImage(it)
             }
         }
     )
@@ -118,7 +122,7 @@ fun AddEditCollectionView(
                 Text(
                     modifier = modifier
                         .fillMaxWidth(),
-                    text = stringResource(Res.string.collection_image_text),
+                    text = stringResource(Res.string.item_image_text),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
                 )
@@ -128,7 +132,7 @@ fun AddEditCollectionView(
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(4.dp),
-                    text = stringResource(Res.string.collection_image_subtext),
+                    text = stringResource(Res.string.item_image_subtext),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelMedium,
                 )
@@ -139,10 +143,10 @@ fun AddEditCollectionView(
                     .padding(0.dp, 4.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                if (collectionImage != null) {
+                if (itemImage != null) {
                     Image(
-                        bitmap = collectionImage!!.toImageBitmap(),
-                        contentDescription = stringResource(Res.string.collection_image_description),
+                        bitmap = itemImage!!.toImageBitmap(),
+                        contentDescription = stringResource(Res.string.item_image_description),
                         contentScale = ContentScale.Crop,
                         modifier = modifier
                             .height(150.dp)
@@ -155,7 +159,7 @@ fun AddEditCollectionView(
                 } else {
                     ClickableImage(
                         image = Res.drawable.placeholder,
-                        contentDescription = stringResource(Res.string.collection_image_description),
+                        contentDescription = stringResource(Res.string.item_image_description),
                         onClick = {
                             imagePicker.launch()
                         },
@@ -170,13 +174,13 @@ fun AddEditCollectionView(
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(4.dp, 10.dp, 4.dp, 0.dp)
+                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
             ) {
                 Text(
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(4.dp),
-                    text = stringResource(Res.string.collection_text_description),
+                        .padding(0.dp, 4.dp),
+                    text = stringResource(Res.string.item_text_description),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
                 )
@@ -186,35 +190,48 @@ fun AddEditCollectionView(
                     .fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = collectionName,
+                    value = itemName,
                     onValueChange = {
-                        collectionName = it
+                        itemName = it
                     },
-                    label = { Text(stringResource(Res.string.collection_name_label_input)) },
+                    label = { Text(stringResource(Res.string.item_name_label_input)) },
                     placeholder = { Text(stringResource(Res.string.input_placeholder)) },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(0.dp, 4.dp)
                 )
             }
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 4.dp)
             ) {
                 OutlinedTextField(
-                    value = collectionDescription,
+                    value = itemDescription,
                     onValueChange = {
-                        collectionDescription = it
+                        itemDescription = it
                     },
-                    label = { Text(stringResource(Res.string.collection_description_label_input)) },
+                    label = { Text(stringResource(Res.string.item_description_label_input)) },
                     placeholder = { Text(stringResource(Res.string.input_placeholder)) },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = modifier
                         .fillMaxWidth()
                         .height(150.dp)
-                        .padding(0.dp, 4.dp)
+                )
+            }
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    value = itemEstimatedValue ?: "",
+                    onValueChange = {
+                        itemEstimatedValue = it
+                    },
+                    label = { Text(stringResource(Res.string.item_value_label_input)) },
+                    placeholder = { Text(stringResource(Res.string.input_placeholder)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                    modifier = modifier
+                        .fillMaxWidth()
                 )
             }
             Row(
@@ -223,10 +240,10 @@ fun AddEditCollectionView(
                     .padding(0.dp, 4.dp)
             ) {
                 DropdownMenu(
-                    label = stringResource(Res.string.collection_dropdown_label),
-                    options = CollectionCategory.entries.map { it.name },
-                    selectedOption = collectionCategory.toString(),
-                    onOptionSelected = { collectionCategory = stringToCollectionCategory(it) },
+                    label = stringResource(Res.string.item_dropdown_label),
+                    options = Condition.entries.map { it.name },
+                    selectedOption = itemCondition.name,
+                    onOptionSelected = { itemCondition = stringToItemCondition(it) },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(0.dp, 4.dp)
@@ -234,8 +251,7 @@ fun AddEditCollectionView(
             }
             Row(horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 4.dp))
+                    .fillMaxWidth())
             {
                 TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
                     onClick = { onBack() },
@@ -243,16 +259,19 @@ fun AddEditCollectionView(
                     Text(text = stringResource(Res.string.cancel_button), style = MaterialTheme.typography.titleMedium)
                 }
                 TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
-                    enabled = collectionName.isNotBlank(),
+                    enabled = itemName.isNotBlank(),
                     onClick = {
-                        val collection = ItemsCollection(
-                            collectionId = editCollectionId ?: 0L,
-                            name = collectionName,
-                            description = collectionDescription,
-                            image = collectionImage,
-                            category = collectionCategory
+                        val estimatedValue = itemEstimatedValue?.toDouble() ?: 0.0
+                        val item = Item(
+                            itemId = editItemId ?: 0L,
+                            collectionId = collectionId,
+                            name = itemName,
+                            description = itemDescription.ifBlank { null },
+                            imageBitmap = itemImage,
+                            estimatedValue = estimatedValue,
+                            condition = itemCondition
                         )
-                        viewModel.upsertCollection(collection)
+                        viewModel.upsertItem(item)
                         onBack()
                     },
                 ) {
@@ -263,11 +282,11 @@ fun AddEditCollectionView(
     }
 }
 
-private fun stringToCollectionCategory(value: String): CollectionCategory {
+private fun stringToItemCondition(value: String): Condition {
     return try {
-        CollectionCategory.valueOf(value)
+        Condition.valueOf(value)
     }
     catch  (e: IllegalArgumentException) {
-        CollectionCategory.Anything
+        Condition.New
     }
 }
