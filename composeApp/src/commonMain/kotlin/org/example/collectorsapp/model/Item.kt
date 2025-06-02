@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Suppress("ArrayInDataClass")
 @Entity(foreignKeys = [
     ForeignKey(
@@ -24,5 +26,4 @@ data class Item(
     @ColumnInfo(name = "item_value") var estimatedValue: Double? = null,
     @ColumnInfo(name = "item_condition") var condition: Condition
 ) {
-
 }

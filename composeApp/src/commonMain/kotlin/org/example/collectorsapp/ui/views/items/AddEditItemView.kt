@@ -7,14 +7,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,7 +35,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.preat.peekaboo.image.picker.SelectionMode
 import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
@@ -59,9 +55,10 @@ import org.example.collectorsapp.model.Condition
 import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.ui.components.ClickableImage
 import org.example.collectorsapp.ui.components.DropdownMenu
-import org.example.collectorsapp.ui.views.collections.CollectionDetailViewModel
 import org.example.collectorsapp.utils.processImage
+import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.max
 
 @Composable
 fun AddEditItemView(
@@ -80,16 +77,13 @@ fun AddEditItemView(
     val editItemId by remember { mutableStateOf(itemId) }
     LaunchedEffect(editItemId) {
         if (editItemId != null) {
-            val item = viewModel.getItemById(itemId!!)
+            val item = viewModel.getItemById(editItemId!!)
             if (item != null) {
                 itemName = item.name
                 itemDescription = item.description ?: ""
                 itemImage = item.imageBitmap
                 itemCondition = item.condition
                 itemEstimatedValue = item.estimatedValue.toString()
-            }
-            else {
-                onBack()
             }
         }
     }
@@ -107,7 +101,6 @@ fun AddEditItemView(
 
     Box(
         modifier = modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -261,7 +254,7 @@ fun AddEditItemView(
                 TextButton(modifier = Modifier.fillMaxWidth().weight(1f),
                     enabled = itemName.isNotBlank(),
                     onClick = {
-                        val estimatedValue = stringToDouble(itemEstimatedValue ?: "")
+                        val estimatedValue = max(stringToDouble(itemEstimatedValue ?: ""), 0.0)
                         val item = Item(
                             itemId = editItemId ?: 0L,
                             collectionId = collectionId,

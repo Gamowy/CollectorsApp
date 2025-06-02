@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Suppress("ArrayInDataClass")
 @Entity
+@Serializable
 data class ItemsCollection(
     @PrimaryKey(autoGenerate = true) val collectionId: Long = 0L,
     @ColumnInfo(name = "collection_name") var name: String,

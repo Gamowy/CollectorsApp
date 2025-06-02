@@ -1,5 +1,8 @@
 package org.example.collectorsapp.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class CollectionCategory {
     Anything,
     Cards,

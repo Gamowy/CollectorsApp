@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -57,8 +56,8 @@ import org.example.collectorsapp.model.CollectionCategory
 import org.example.collectorsapp.model.ItemsCollection
 import org.example.collectorsapp.ui.components.ClickableImage
 import org.example.collectorsapp.ui.components.DropdownMenu
-import org.example.collectorsapp.utils.encodeToPngBytes
 import org.example.collectorsapp.utils.processImage
+import org.example.collectorsapp.viewmodels.CollectionsListViewModel
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -103,7 +102,6 @@ fun AddEditCollectionView(
 
     Box(
         modifier = modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {

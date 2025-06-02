@@ -49,6 +49,7 @@
     <string name="item_dropdown_label">Condition</string>
     <string name="button_create_item">Create item</string>
     <string name="category_label">Category: </string>
+    <string name="search_items_hint">Search for items...</string>
     <!-- ItemCard -->
     <string name="item_card_image_description">Item Image</string>
     <string name="item_card_name">Item Name</string>

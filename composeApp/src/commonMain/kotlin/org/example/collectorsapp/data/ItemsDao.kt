@@ -19,7 +19,7 @@ interface ItemsDao {
     suspend fun getTotalValueByCollectionId(collectionId: Long): Double?
 
     @Query("SELECT * FROM Item WHERE itemId = :id")
-    suspend fun getItemById(id: Long): Item
+    suspend fun getItemById(id: Long): Item?
 
     @Query("SELECT * FROM Item WHERE collection_id = :collectionId")
     fun getItemsByCollectionId(collectionId: Long): Flow<List<Item>>

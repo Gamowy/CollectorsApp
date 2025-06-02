@@ -19,5 +19,5 @@ interface ItemsCollectionDao {
     fun getAllCollections(): Flow<List<ItemsCollection>>
 
     @Query("SELECT * FROM ItemsCollection WHERE collectionId = :id")
-    suspend fun getCollectionById(id: Long): ItemsCollection
+    suspend fun getCollectionById(id: Long): ItemsCollection?
 }

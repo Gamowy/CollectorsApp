@@ -15,9 +15,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.button_new_collection
 import kotlinproject.composeapp.generated.resources.plus
+import kotlinproject.composeapp.generated.resources.search_bar_hint
 import org.example.collectorsapp.ui.components.CollectionCard
 import org.example.collectorsapp.ui.components.FabButton
 import org.example.collectorsapp.ui.components.SearchBar
+import org.example.collectorsapp.viewmodels.CollectionsListViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -29,6 +31,8 @@ fun CollectionsView(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+
+
     Box (modifier = modifier
         .fillMaxSize()
     ) {
@@ -36,9 +40,9 @@ fun CollectionsView(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                SearchBar(state.searchQuery, onValueChange = {
-                    viewModel.searchCollections(it)
-                })
+                SearchBar(searchQuery = state.searchQuery,
+                    searchHint = stringResource(Res.string.search_bar_hint),
+                    onValueChange = { viewModel.searchCollections(it) })
                 Spacer(modifier = Modifier.height(8.dp))
             }
             items(state.searchResultsList.size) { index ->

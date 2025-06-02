@@ -26,13 +26,17 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.clear
 import kotlinproject.composeapp.generated.resources.search
 import kotlinproject.composeapp.generated.resources.search_bar_clear_hint
-import kotlinproject.composeapp.generated.resources.search_bar_hint
 import kotlinproject.composeapp.generated.resources.search_bar_icon_description
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SearchBar(searchQuery: String, onValueChange: (String) -> Unit) {
+fun SearchBar(
+    searchQuery: String,
+    searchHint: String,
+    onValueChange: (String) -> Unit,
+    modifier : Modifier = Modifier
+    ) {
     var searchText by remember { mutableStateOf(searchQuery) }
     TextField(
         value = searchText,
@@ -40,8 +44,8 @@ fun SearchBar(searchQuery: String, onValueChange: (String) -> Unit) {
             searchText = it
             onValueChange(it)
         },
-        placeholder = { Text(stringResource(Res.string.search_bar_hint)) },
-        modifier = Modifier
+        placeholder = { Text(searchHint) },
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(32.dp))
             .shadow(2.dp, RoundedCornerShape(32.dp)),

@@ -1,4 +1,4 @@
-package org.example.collectorsapp.ui.views.collections
+package org.example.collectorsapp.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 import org.example.collectorsapp.data.CollectionDatabase
 
 import org.example.collectorsapp.model.ItemsCollection
+import org.example.collectorsapp.ui.views.collections.CollectionCardState
+import org.example.collectorsapp.ui.views.collections.CollectionsListState
 
 class CollectionsListViewModel(private val repository: CollectionDatabase) : ViewModel() {
     private var collectionDao = repository.getCollectionDao()
@@ -44,7 +46,9 @@ class CollectionsListViewModel(private val repository: CollectionDatabase) : Vie
     fun deleteCollectionById(collectionId: Long) {
         viewModelScope.launch {
             val collection = collectionDao.getCollectionById(collectionId)
-            collectionDao.delete(collection)
+            if (collection != null) {
+                collectionDao.delete(collection)
+            }
         }
     }
 

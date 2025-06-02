@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.estimated_value
 import kotlinproject.composeapp.generated.resources.image_collection_description
@@ -77,6 +78,7 @@ fun ItemCard(
                     text = item.name.ifEmpty { stringResource(Res.string.item_no_name) },
                     color = Color.White,
                     style = MaterialTheme.typography.titleLarge,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

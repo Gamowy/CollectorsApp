@@ -1,14 +1,16 @@
-package org.example.collectorsapp.ui.views.collections
+package org.example.collectorsapp.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.model.Item
+import org.example.collectorsapp.ui.views.collections.CollectionDetailState
 
 class CollectionDetailViewModel(private val collectionId: Long, private val repository: CollectionDatabase): ViewModel() {
     private var collectionDao = repository.getCollectionDao()
@@ -20,13 +22,11 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
     init {
         viewModelScope.launch {
             val collection = collectionDao.getCollectionById(collectionId)
-            val collectionValue = getCollectionValue(collectionId)
-
             itemsDao.getItemsByCollectionId(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
-                        collection = collection,
-                        collectionValue = collectionValue,
+                        collection = collection ?: it.collection,
+                        collectionValue = getCollectionValue(collectionId),
                         items = items,
                         searchQuery = it.searchQuery,
                         searchResultsList = items
@@ -39,11 +39,21 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
     fun upsertItem(item:  Item) {
         viewModelScope.launch {
             itemsDao.upsert(item)
+            _state.update {
+                it.copy(
+                    collection = it.collection,
+                    collectionValue = getCollectionValue(collectionId),
+                    items = it.items,
+                    searchQuery = it.searchQuery,
+                    searchResultsList = it.searchResultsList
+                )
+            }
+            collectionDao.upsert(_state.value.collection)
         }
     }
 
-    fun getItemById(itemId: Long) : Item? {
-        return _state.value.items.find { it.itemId == itemId }
+    suspend fun getItemById(itemId: Long) : Item? {
+        return itemsDao.getItemById(itemId)
     }
 
     fun searchItems(query: String) {

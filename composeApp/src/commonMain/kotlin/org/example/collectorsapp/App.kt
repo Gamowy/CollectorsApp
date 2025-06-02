@@ -13,20 +13,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import androidx.navigation.toRoute
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.example.collectorsapp.data.CollectionDatabase
+import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.ui.components.NavBar
 import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
 import org.example.collectorsapp.ui.components.topbars.DetailTopBar
@@ -36,12 +43,14 @@ import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
 import org.example.collectorsapp.ui.views.collections.AddEditCollectionView
 import org.example.collectorsapp.ui.views.collections.CollectionDetailView
-import org.example.collectorsapp.ui.views.collections.CollectionDetailViewModel
+import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
 import org.example.collectorsapp.ui.views.collections.CollectionsView
-import org.example.collectorsapp.ui.views.collections.CollectionsListViewModel
+import org.example.collectorsapp.viewmodels.CollectionsListViewModel
 import org.example.collectorsapp.ui.views.gemini.GeminiView
 import org.example.collectorsapp.ui.views.items.AddEditItemView
+import org.example.collectorsapp.ui.views.items.ItemDetailView
 import org.example.collectorsapp.ui.views.settings.SettingsView
+import org.example.collectorsapp.viewmodels.ItemDetailsViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,18 +105,19 @@ fun App(repository: CollectionDatabase) {
                             },
                             onAddClick = {
                                 navController.navigate(NavigationDestination.AddEditCollectionView())
-                            }
+                            },
+                            modifier = Modifier.padding(12.dp, 0.dp)
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
                     composable<NavigationDestination.GeminiView> {
-                        GeminiView()
+                        GeminiView(modifier = Modifier.padding(12.dp, 0.dp))
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
                     composable<NavigationDestination.SettingsView> {
-                        SettingsView()
+                        SettingsView(modifier = Modifier.padding(12.dp, 0.dp))
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
@@ -118,19 +128,23 @@ fun App(repository: CollectionDatabase) {
                         AddEditCollectionView(
                             collectionId = args.collectionId,
                             viewModel = collectionsViewModel,
-                            onBack = { navController.popBackStack() }
+                            onBack = { navController.popBackStack() },
+                            modifier = Modifier.padding(4.dp, 0.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
                     }
                     composable<NavigationDestination.CollectionDetailView> { it ->
                         val args = it.toRoute<NavigationDestination.CollectionDetailView>()
-                        val collectionsDetailViewModel = viewModel { CollectionDetailViewModel(args.collectionId, repository) }
+                        val viewModel  = viewModel { CollectionDetailViewModel(args.collectionId, repository) }
                         CollectionDetailView(
-                            viewModel = CollectionDetailViewModel(args.collectionId, repository),
+                            viewModel = viewModel,
                             onAddClick = {
                                 navController.navigate(NavigationDestination.AddEditItemView(args.collectionId))
                             },
+                            onItemClick = { collectionId, itemId ->
+                                navController.navigate(NavigationDestination.ItemDetailView(collectionId, itemId))
+                            }
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.DetailTopBar
@@ -141,22 +155,42 @@ fun App(repository: CollectionDatabase) {
                             navController.navigate(NavigationDestination.AddEditCollectionView(args.collectionId))
                         }
                     }
+
+                    // Items destinations
                     composable<NavigationDestination.AddEditItemView> {it ->
                         val args = it.toRoute<NavigationDestination.AddEditItemView>()
+                        val viewModel  = viewModel { CollectionDetailViewModel(args.collectionId, repository) }
                         AddEditItemView(
                             collectionId = args.collectionId,
                             itemId = args.itemId,
-                            viewModel = CollectionDetailViewModel(args.collectionId, repository),
-                            onBack = { navController.popBackStack() }
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() },
+                            modifier = Modifier.padding(4.dp, 0.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
+                    }
+                    composable<NavigationDestination.ItemDetailView> {
+                        val args = it.toRoute<NavigationDestination.ItemDetailView>()
+                        val viewModel = viewModel { ItemDetailsViewmodel(args.collectionId, args.itemId, repository) }
+                        ItemDetailView(
+                            viewModel = viewModel,
+                            modifier = Modifier.padding(4.dp, 0.dp)
+                        )
+                        deleteAction = {
+                            viewModel.deleteItem()
+                        }
+                        editAction = {
+                            navController.navigate(NavigationDestination.AddEditItemView(args.collectionId, args.itemId))
+                        }
+                        showBottomAppBar = false
+                        topAppBarType = TopAppBarType.DetailTopBar
                     }
                 }
                 NavHost(
                     navController = navController,
                     graph = navGraph,
-                    modifier = Modifier.padding(it).padding(12.dp, 0.dp)
+                    modifier = Modifier.padding(it)
                 )
             }
         }
@@ -177,6 +211,8 @@ object NavigationDestination {
     data class CollectionDetailView(val collectionId: Long)
     @Serializable
     data class AddEditItemView(val collectionId: Long, val itemId: Long? = null)
+    @Serializable
+    data class ItemDetailView(val collectionId: Long, val itemId: Long)
 }
 
 enum class TopAppBarType {
