@@ -27,7 +27,9 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
                     it.copy(
                         collection = collection,
                         collectionValue = collectionValue,
-                        items = items
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
                     )
                 }
             }
@@ -42,6 +44,22 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getItemById(itemId: Long) : Item? {
         return _state.value.items.find { it.itemId == itemId }
+    }
+
+    fun searchItems(query: String) {
+        _state.update {
+            it.copy(
+                collection = it.collection,
+                collectionValue = it.collectionValue,
+                items = it.items,
+                searchQuery = query,
+                searchResultsList = it.items.filter { item ->
+                    item.name.contains(query, ignoreCase = true) ||
+                    item.description?.contains(query, ignoreCase = true) == true ||
+                    item.condition.name.contains(query, ignoreCase = true)
+                }
+            )
+        }
     }
 
     private suspend fun getCollectionValue(collectionId: Long): Double  {

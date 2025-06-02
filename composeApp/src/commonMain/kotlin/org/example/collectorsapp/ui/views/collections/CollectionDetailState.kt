@@ -10,5 +10,7 @@ data class CollectionDetailState(
         category = CollectionCategory.Anything
     ),
     val collectionValue: Double = 0.0,
-    val items: List<Item> = emptyList()
+    val items: List<Item> = emptyList(),
+    val searchQuery: String = "",
+    val searchResultsList: List<Item> = emptyList()
 )

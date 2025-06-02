@@ -51,6 +51,7 @@ import kotlinproject.composeapp.generated.resources.placeholder
 import kotlinproject.composeapp.generated.resources.plus
 import org.example.collectorsapp.ui.components.FabButton
 import org.example.collectorsapp.ui.components.ItemCard
+import org.example.collectorsapp.ui.components.SearchBar
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -164,13 +165,17 @@ fun CollectionDetailView(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(8.dp)
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                SearchBar(state.searchQuery, onValueChange = {
+                    viewModel.searchItems(it)
+                })
                 LazyHorizontalGrid(
                     rows = GridCells.FixedSize(150.dp),
                     contentPadding = PaddingValues(4.dp),
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    items(state.items.size) { index ->
-                        val item = state.items[index]
+                    items(state.searchResultsList.size) { index ->
+                        val item = state.searchResultsList[index]
                         ItemCard(
                             item = item,
                             onClick = {},

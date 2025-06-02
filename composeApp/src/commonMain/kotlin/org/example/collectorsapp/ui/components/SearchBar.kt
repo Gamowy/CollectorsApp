@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.backspace
+import kotlinproject.composeapp.generated.resources.clear
 import kotlinproject.composeapp.generated.resources.search
 import kotlinproject.composeapp.generated.resources.search_bar_clear_hint
 import kotlinproject.composeapp.generated.resources.search_bar_hint
@@ -60,7 +60,7 @@ fun SearchBar(searchQuery: String, onValueChange: (String) -> Unit) {
         trailingIcon = {
             AnimatedVisibility(searchText.isNotEmpty()) {
                 Icon(
-                    painter = painterResource(Res.drawable.backspace),
+                    painter = painterResource(Res.drawable.clear),
                     contentDescription = stringResource(Res.string.search_bar_clear_hint),
                     tint = Color.Gray,
                     modifier = Modifier
