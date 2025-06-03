@@ -51,6 +51,7 @@ import org.example.collectorsapp.ui.views.items.AddEditItemView
 import org.example.collectorsapp.ui.views.items.ItemDetailView
 import org.example.collectorsapp.ui.views.settings.SettingsView
 import org.example.collectorsapp.viewmodels.ItemDetailsViewmodel
+import org.example.collectorsapp.viewmodels.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,9 +118,13 @@ fun App(repository: CollectionDatabase) {
                         topAppBarType = TopAppBarType.TitleOnly
                     }
                     composable<NavigationDestination.SettingsView> {
-                        SettingsView(modifier = Modifier.padding(12.dp, 0.dp))
+                        SettingsView(
+                            viewModel = viewModel { SettingsViewModel(repository) },
+                            modifier = Modifier.padding(8.dp),
+                            onBack = { navController.popBackStack() }
+                        )
                         showBottomAppBar = true
-                        topAppBarType = TopAppBarType.TitleOnly
+                        topAppBarType = TopAppBarType.AddEdit
                     }
 
                     // Collections destinations

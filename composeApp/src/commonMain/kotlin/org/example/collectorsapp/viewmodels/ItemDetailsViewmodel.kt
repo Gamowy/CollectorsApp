@@ -11,6 +11,7 @@ import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.model.Condition
 import org.example.collectorsapp.model.Item
 
+
 class ItemDetailsViewmodel(private val collectionId: Long, private val itemId: Long, private val repository : CollectionDatabase) : ViewModel() {
     private var itemsDao = repository.getItemsDao()
 

@@ -20,4 +20,7 @@ interface ItemsCollectionDao {
 
     @Query("SELECT * FROM ItemsCollection WHERE collectionId = :id")
     suspend fun getCollectionById(id: Long): ItemsCollection?
+
+    @Query("DELETE FROM ItemsCollection")
+    suspend fun deleteAllCollections()
 }

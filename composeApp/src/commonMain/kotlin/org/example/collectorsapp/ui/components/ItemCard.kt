@@ -33,6 +33,8 @@ import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.example.collectorsapp.AppState.currency
+import org.example.collectorsapp.AppState.currencySymbol
 
 @Composable
 fun ItemCard(
@@ -95,10 +97,10 @@ fun ItemCard(
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        text = "\$${item.estimatedValue?.let {
+                        text = "${item.estimatedValue?.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}",
+                        }}${currencySymbol}",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,

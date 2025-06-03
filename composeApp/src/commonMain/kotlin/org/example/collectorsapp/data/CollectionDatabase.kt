@@ -26,3 +26,8 @@ fun getCollectionDatabase(builder: RoomDatabase.Builder<CollectionDatabase>): Co
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }
+
+suspend fun CollectionDatabase.clearDatabase() {
+    getCollectionDao().deleteAllCollections()
+    getItemsDao().deleteAllItems()
+}

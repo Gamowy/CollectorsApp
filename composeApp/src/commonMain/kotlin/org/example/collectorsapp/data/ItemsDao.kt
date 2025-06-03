@@ -23,4 +23,7 @@ interface ItemsDao {
 
     @Query("SELECT * FROM Item WHERE collection_id = :collectionId")
     fun getItemsByCollectionId(collectionId: Long): Flow<List<Item>>
+
+    @Query("DELETE FROM Item")
+    suspend fun deleteAllItems()
 }
