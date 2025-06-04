@@ -15,6 +15,7 @@ import org.example.collectorsapp.ui.views.collections.CollectionDetailState
 class CollectionDetailViewModel(private val collectionId: Long, private val repository: CollectionDatabase): ViewModel() {
     private var collectionDao = repository.getCollectionDao()
     private var itemsDao = repository.getItemsDao()
+    private var userSettingsDao = repository.getUserSettingsDao()
 
     private var _state = MutableStateFlow(CollectionDetailState())
     val state = _state.asStateFlow()

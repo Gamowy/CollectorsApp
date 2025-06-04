@@ -120,11 +120,10 @@ fun App(repository: CollectionDatabase) {
                     composable<NavigationDestination.SettingsView> {
                         SettingsView(
                             viewModel = viewModel { SettingsViewModel(repository) },
-                            modifier = Modifier.padding(8.dp),
-                            onBack = { navController.popBackStack() }
+                            modifier = Modifier.padding(8.dp)
                         )
                         showBottomAppBar = true
-                        topAppBarType = TopAppBarType.AddEdit
+                        topAppBarType = TopAppBarType.TitleOnly
                     }
 
                     // Collections destinations

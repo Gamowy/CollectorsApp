@@ -35,8 +35,6 @@ import kotlinproject.composeapp.generated.resources.item_card_image_description
 import kotlinproject.composeapp.generated.resources.not_available_description
 import kotlinproject.composeapp.generated.resources.not_available_name
 import kotlinproject.composeapp.generated.resources.placeholder
-import org.example.collectorsapp.AppState.currency
-import org.example.collectorsapp.AppState.currencySymbol
 import org.example.collectorsapp.model.ItemsCollection
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.jetbrains.compose.resources.painterResource
@@ -46,6 +44,7 @@ import org.jetbrains.compose.resources.stringResource
 fun CollectionCard(
     collection: ItemsCollection,
     collectionValue: Double,
+    currency: String,
     onClick: (() -> Unit),
     modifier: Modifier = Modifier
 ) {
@@ -128,7 +127,7 @@ fun CollectionCard(
                         text = "${stringResource(Res.string.estimated_value)}${collectionValue.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}${currencySymbol}",
+                        }}${currency}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,

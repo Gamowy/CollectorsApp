@@ -13,37 +13,46 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.example.collectorsapp.data.CollectionDatabase
+import org.example.collectorsapp.data.UserSettingsDao
 import org.example.collectorsapp.model.Currencies
-import org.example.collectorsapp.AppState
 import org.example.collectorsapp.ui.components.PopupDialog
 import org.jetbrains.compose.resources.stringResource
-
-data class SettingsUiState(
-    val currencyUI: Currencies = Currencies.USD,
-    val currencySymbolUI: String = "$",
-    val apiKeyUI: String? = null
-)
+import org.example.collectorsapp.ui.views.settings.SettingsState
 
 class SettingsViewModel(private val repository: CollectionDatabase) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsUiState())
-    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+    private val userSettingsDao = repository.getUserSettingsDao()
 
-    fun onApiKeyChange(newKey: String) {
-        _uiState.value = _uiState.value.copy(apiKeyUI = newKey)
-        AppState.apiKey = newKey
+    private val _uiState = MutableStateFlow(SettingsState())
+    val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val apiKey =  userSettingsDao.getApiKey()
+            val currency = userSettingsDao.getCurrency()
+            _uiState.value = SettingsState(
+                apiKeyUI = apiKey,
+                currencyUI = Currencies.valueOf(currency)
+            )
+        }
     }
 
-    fun onCurrencyChange(currency: Currencies, symbol: String) {
-        _uiState.value = _uiState.value.copy(currencyUI = currency)
-        _uiState.value = uiState.value.copy(currencySymbolUI = symbol)
-        AppState.currency = currency
-        AppState.currencySymbol = symbol
+    fun onApiKeyChange(newKey: String) {
+        viewModelScope.launch {
+            userSettingsDao.updateApiKey(newKey)
+            _uiState.value = _uiState.value.copy(apiKeyUI = newKey)
+        }
+    }
+
+    fun onCurrencyChange(currency: Currencies) {
+        viewModelScope.launch {
+            userSettingsDao.updateCurrency(currency.name)
+            _uiState.value = _uiState.value.copy(currencyUI = currency)
+        }
     }
 
     fun clearAppData() {
         viewModelScope.launch {
-            repository.getItemsDao().deleteAllItems()
             repository.getCollectionDao().deleteAllCollections()
         }
     }

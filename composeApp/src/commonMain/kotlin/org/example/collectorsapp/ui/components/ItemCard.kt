@@ -33,12 +33,11 @@ import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.example.collectorsapp.AppState.currency
-import org.example.collectorsapp.AppState.currencySymbol
 
 @Composable
 fun ItemCard(
     item: Item,
+    currency: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -100,7 +99,7 @@ fun ItemCard(
                         text = "${item.estimatedValue?.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}${currencySymbol}",
+                        }}${currency}",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,

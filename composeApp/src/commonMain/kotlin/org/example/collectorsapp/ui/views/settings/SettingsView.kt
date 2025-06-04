@@ -22,13 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinproject.composeapp.generated.resources.Res
 import org.example.collectorsapp.model.Currencies
 import org.example.collectorsapp.ui.components.DropdownMenu
 import org.jetbrains.compose.resources.stringResource
-import org.example.collectorsapp.AppState.currency
-import org.example.collectorsapp.AppState.currencySymbol
-import org.example.collectorsapp.AppState.apiKey
 import org.example.collectorsapp.viewmodels.SettingsViewModel
 import kotlinproject.composeapp.generated.resources.text_gemini_api_key
 import kotlinproject.composeapp.generated.resources.label_gemini_api_key
@@ -43,9 +41,9 @@ import org.example.collectorsapp.ui.components.PopupDialog
 @Composable
 fun SettingsView(
     viewModel: SettingsViewModel,
-    modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    modifier: Modifier = Modifier
     ) {
+    val state: SettingsState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var showAlertDialog by remember { mutableStateOf(false) }
 
@@ -57,7 +55,6 @@ fun SettingsView(
             onConfirm = {
                 showAlertDialog = false
                 viewModel.clearAppData()
-                onBack()
             })
     }
 
@@ -70,8 +67,6 @@ fun SettingsView(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
-
             Text(
                 text = stringResource(Res.string.text_gemini_api_key),
                 modifier = modifier,
@@ -79,10 +74,9 @@ fun SettingsView(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = modifier)
 
             OutlinedTextField(
-                value = "",
+                value = state.apiKeyUI,
                 onValueChange = {
                     viewModel.onApiKeyChange(it)
                 },
@@ -90,7 +84,6 @@ fun SettingsView(
                 modifier = modifier
                     .fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(48.dp))
 
             Text(
                 text = stringResource(Res.string.text_currency_change),
@@ -99,20 +92,18 @@ fun SettingsView(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = modifier)
 
             DropdownMenu(
                 label = stringResource(Res.string.dropdown_currency_label),
                 options = Currencies.entries.map { it.name },
-                selectedOption = currency.name,
+                selectedOption = state.currencyUI.name,
                 onOptionSelected = {
-                    viewModel.onCurrencyChange(Currencies.valueOf(it), Currencies.valueOf(it).symbol)
+                    viewModel.onCurrencyChange(currency = Currencies.valueOf(it))
                                    },
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(0.dp, 4.dp)
             )
-            Spacer(modifier = Modifier.height(48.dp))
 
             Text(
                 text = stringResource(Res.string.text_clear_all_data),
@@ -121,7 +112,6 @@ fun SettingsView(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = modifier)
 
             Button(
                 onClick = {
