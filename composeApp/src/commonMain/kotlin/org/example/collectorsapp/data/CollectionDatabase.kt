@@ -35,7 +35,7 @@ fun getCollectionDatabase(builder: RoomDatabase.Builder<CollectionDatabase>): Co
 internal class InitializeDatabase : RoomDatabase.Callback() {
     override fun onOpen(connection : SQLiteConnection) {
         connection.apply {
-            execSQL("INSERT OR IGNORE INTO UserSettings(currency, api_key) VALUES ('${Currencies.USD.name}', '${"1234"}')")
+            execSQL("INSERT OR IGNORE INTO UserSettings(currency, api_key) VALUES ('${Currencies.USD.name}', '${""}')")
         }
     }
 }
