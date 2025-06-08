@@ -127,7 +127,7 @@ fun CollectionCard(
                         text = "${stringResource(Res.string.estimated_value)}${collectionValue.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}${currency}",
+                        }} $currency",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,

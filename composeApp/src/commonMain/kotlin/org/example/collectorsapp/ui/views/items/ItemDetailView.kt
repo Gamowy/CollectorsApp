@@ -47,6 +47,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ItemDetailView(
     viewModel: ItemDetailsViewmodel,
+    currency : String,
     modifier: Modifier = Modifier
 ) {
     val item by viewModel.item.collectAsStateWithLifecycle()
@@ -123,10 +124,10 @@ fun ItemDetailView(
                         fontSize = 20.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis)
-                    Text(text = item.estimatedValue?.let {
-                        if (it > 0) "\$$it"
-                        else "\$0"
-                    } ?: "\$0",
+                    Text(text = "${item.estimatedValue?.let {
+                        if (it > 0) it
+                        else 0
+                    } ?: 0} $currency",
                         fontSize = 16.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis)

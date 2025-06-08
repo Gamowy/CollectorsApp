@@ -13,27 +13,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import androidx.navigation.toRoute
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.example.collectorsapp.data.CollectionDatabase
-import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.ui.components.NavBar
 import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
 import org.example.collectorsapp.ui.components.topbars.DetailTopBar
@@ -43,13 +37,13 @@ import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
 import org.example.collectorsapp.ui.views.collections.AddEditCollectionView
 import org.example.collectorsapp.ui.views.collections.CollectionDetailView
-import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
 import org.example.collectorsapp.ui.views.collections.CollectionsView
-import org.example.collectorsapp.viewmodels.CollectionsListViewModel
 import org.example.collectorsapp.ui.views.gemini.GeminiView
 import org.example.collectorsapp.ui.views.items.AddEditItemView
 import org.example.collectorsapp.ui.views.items.ItemDetailView
 import org.example.collectorsapp.ui.views.settings.SettingsView
+import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
+import org.example.collectorsapp.viewmodels.CollectionsListViewModel
 import org.example.collectorsapp.viewmodels.ItemDetailsViewmodel
 import org.example.collectorsapp.viewmodels.SettingsViewModel
 
@@ -95,6 +89,8 @@ fun App(repository: CollectionDatabase) {
                 } },
             ) { it ->
                 val collectionsViewModel = viewModel { CollectionsListViewModel(repository) }
+                val settingsViewModel = viewModel { SettingsViewModel(repository) }
+                val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
                 val navGraph = navController.createGraph(startDestination = NavigationDestination.CollectionsView) {
                     // Bottom navigation destinations
@@ -107,6 +103,7 @@ fun App(repository: CollectionDatabase) {
                             onAddClick = {
                                 navController.navigate(NavigationDestination.AddEditCollectionView())
                             },
+                            currency = settingsState.currencyUI.name,
                             modifier = Modifier.padding(12.dp, 0.dp)
                         )
                         showBottomAppBar = true
@@ -119,7 +116,7 @@ fun App(repository: CollectionDatabase) {
                     }
                     composable<NavigationDestination.SettingsView> {
                         SettingsView(
-                            viewModel = viewModel { SettingsViewModel(repository) },
+                            viewModel = settingsViewModel,
                             modifier = Modifier.padding(8.dp)
                         )
                         showBottomAppBar = true
@@ -148,7 +145,8 @@ fun App(repository: CollectionDatabase) {
                             },
                             onItemClick = { collectionId, itemId ->
                                 navController.navigate(NavigationDestination.ItemDetailView(collectionId, itemId))
-                            }
+                            },
+                            currency = settingsState.currencyUI.name,
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.DetailTopBar
@@ -179,6 +177,7 @@ fun App(repository: CollectionDatabase) {
                         val viewModel = viewModel { ItemDetailsViewmodel(args.collectionId, args.itemId, repository) }
                         ItemDetailView(
                             viewModel = viewModel,
+                            currency = settingsState.currencyUI.name,
                             modifier = Modifier.padding(4.dp, 0.dp)
                         )
                         deleteAction = {

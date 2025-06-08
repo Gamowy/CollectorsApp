@@ -99,7 +99,7 @@ fun ItemCard(
                         text = "${item.estimatedValue?.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}${currency}",
+                        }} $currency",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,

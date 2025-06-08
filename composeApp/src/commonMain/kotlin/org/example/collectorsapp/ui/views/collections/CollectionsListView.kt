@@ -27,11 +27,10 @@ fun CollectionsView(
     viewModel : CollectionsListViewModel,
     onCollectionClick: (Long) -> Unit,
     onAddClick: () -> Unit,
+    currency: String,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-
 
     Box (modifier = modifier
         .fillMaxSize()
@@ -51,7 +50,8 @@ fun CollectionsView(
                     collection = collectionState.collection,
                     collectionValue = collectionState.collectionValue,
                     onClick = { onCollectionClick(collectionState.collection.collectionId) },
-                    modifier = Modifier.animateItem()
+                    currency = currency,
+                    modifier = Modifier.animateItem(),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }

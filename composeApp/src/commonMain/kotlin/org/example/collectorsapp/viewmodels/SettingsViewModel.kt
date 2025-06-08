@@ -11,6 +11,7 @@ import kotlinproject.composeapp.generated.resources.delete_data_confirmation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.data.UserSettingsDao
@@ -20,7 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.example.collectorsapp.ui.views.settings.SettingsState
 
 class SettingsViewModel(private val repository: CollectionDatabase) : ViewModel() {
-
+    private val collectionDao = repository.getCollectionDao()
     private val userSettingsDao = repository.getUserSettingsDao()
 
     private val _uiState = MutableStateFlow(SettingsState())
@@ -30,24 +31,36 @@ class SettingsViewModel(private val repository: CollectionDatabase) : ViewModel(
         viewModelScope.launch {
             val apiKey =  userSettingsDao.getApiKey()
             val currency = userSettingsDao.getCurrency()
-            _uiState.value = SettingsState(
-                apiKeyUI = apiKey,
-                currencyUI = Currencies.valueOf(currency)
-            )
+            _uiState.update {
+                it.copy (
+                    apiKeyUI = apiKey,
+                    currencyUI = Currencies.valueOf(currency)
+                )
+            }
         }
     }
 
     fun onApiKeyChange(newKey: String) {
         viewModelScope.launch {
             userSettingsDao.updateApiKey(newKey)
-            _uiState.value = _uiState.value.copy(apiKeyUI = newKey)
+            _uiState.update {
+                it.copy(
+                    apiKeyUI = newKey,
+                    currencyUI = it.currencyUI
+                )
+            }
         }
     }
 
     fun onCurrencyChange(currency: Currencies) {
         viewModelScope.launch {
             userSettingsDao.updateCurrency(currency.name)
-            _uiState.value = _uiState.value.copy(currencyUI = currency)
+            _uiState.update {
+                it.copy(
+                    apiKeyUI = it.apiKeyUI,
+                    currencyUI = currency
+                )
+            }
         }
     }
 

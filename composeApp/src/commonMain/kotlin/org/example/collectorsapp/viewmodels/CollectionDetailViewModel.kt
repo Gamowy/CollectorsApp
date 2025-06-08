@@ -15,7 +15,7 @@ import org.example.collectorsapp.ui.views.collections.CollectionDetailState
 class CollectionDetailViewModel(private val collectionId: Long, private val repository: CollectionDatabase): ViewModel() {
     private var collectionDao = repository.getCollectionDao()
     private var itemsDao = repository.getItemsDao()
-    private var userSettingsDao = repository.getUserSettingsDao()
+    private var settingsDao = repository.getUserSettingsDao()
 
     private var _state = MutableStateFlow(CollectionDetailState())
     val state = _state.asStateFlow()
@@ -24,13 +24,15 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
         viewModelScope.launch {
             val collection = collectionDao.getCollectionById(collectionId)
             itemsDao.getItemsByCollectionId(collectionId).collectLatest { items ->
+                val currency = settingsDao.getCurrency()
                 _state.update {
                     it.copy(
                         collection = collection ?: it.collection,
                         collectionValue = getCollectionValue(collectionId),
                         items = items,
                         searchQuery = it.searchQuery,
-                        searchResultsList = items
+                        searchResultsList = items,
+                        currency = currency
                     )
                 }
             }

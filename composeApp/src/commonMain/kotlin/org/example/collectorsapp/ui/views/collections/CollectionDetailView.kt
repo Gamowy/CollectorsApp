@@ -60,6 +60,7 @@ fun CollectionDetailView(
     viewModel: CollectionDetailViewModel,
     onAddClick: () -> Unit,
     onItemClick: (Long, Long) -> Unit,
+    currency: String,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -141,7 +142,7 @@ fun CollectionDetailView(
                             Text(text = "${stringResource(Res.string.estimated_value)}${state.collectionValue.let {
                                 if (it > 0) "$it" 
                                 else "0"
-                            }}",
+                            }} $currency",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -182,6 +183,7 @@ fun CollectionDetailView(
                             onClick = {
                                 onItemClick(item.collectionId, item.itemId)
                             },
+                            currency = currency
                         )
                     }
                 }

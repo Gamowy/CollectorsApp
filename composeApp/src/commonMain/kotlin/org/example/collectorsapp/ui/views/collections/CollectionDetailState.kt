@@ -12,5 +12,6 @@ data class CollectionDetailState(
     val collectionValue: Double = 0.0,
     val items: List<Item> = emptyList(),
     val searchQuery: String = "",
-    val searchResultsList: List<Item> = emptyList()
+    val searchResultsList: List<Item> = emptyList(),
+    val currency : String = "USD"
 )
