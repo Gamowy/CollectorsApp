@@ -44,6 +44,7 @@ import org.jetbrains.compose.resources.stringResource
 fun CollectionCard(
     collection: ItemsCollection,
     collectionValue: Double,
+    currency: String,
     onClick: (() -> Unit),
     modifier: Modifier = Modifier
 ) {
@@ -126,7 +127,7 @@ fun CollectionCard(
                         text = "${stringResource(Res.string.estimated_value)}${collectionValue.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}",
+                        }}${currency}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,

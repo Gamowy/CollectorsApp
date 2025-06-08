@@ -37,6 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ItemCard(
     item: Item,
+    currency: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -95,10 +96,10 @@ fun ItemCard(
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        text = "\$${item.estimatedValue?.let {
+                        text = "${item.estimatedValue?.let {
                             if (it > 0) "$it"
                             else "0"
-                        }}",
+                        }}${currency}",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,

@@ -5,7 +5,7 @@
     <string name="image_collection_description">Collection Image</string>
     <string name="not_available_description">No description provided</string>
     <string name="not_available_name">Unknown collection</string>
-    <string name="estimated_value">Estimated value: $</string>
+    <string name="estimated_value">Estimated value: </string>
     <!-- FabButton -->
     <string name="add_collection">Add collection</string>
     <!-- TopBar -->
@@ -56,4 +56,12 @@
     <string name="item_card_condition">Item Condition</string>
     <string name="item_card_value">Item Value</string>
     <string name="item_no_name">Unknown item</string>
+    <!-- SettingsView -->
+    <string name="text_gemini_api_key">Gemini API Key</string>
+    <string name="label_gemini_api_key">Enter your Gemini API Key</string>
+    <string name="text_currency_change">Change currency</string>
+    <string name="dropdown_currency_label">Select currency</string>
+    <string name="text_clear_all_data">Clear all data</string>
+    <string name="button_clear_data">Clear data</string>
+    <string name="delete_data_confirmation">Are you sure you want to delete all data from the app? This action cannot be undone.</string>
 </resources>
