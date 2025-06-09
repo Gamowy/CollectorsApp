@@ -1,8 +1,8 @@
 package org.example.collectorsapp.model
 
 enum class AiActions(val prompt: String) {
-    CURRENCY_CONVERSION(
-        "Below i will give you a value with specified currency. Convert this value into following currencies: USD, EUR, GBP, JPY, AUD, CAD, CHF, SEK, NZD (skip conversion if currency is same)"
+    PROPOSE_MARKETPLACES(
+        "Based on name, description and category of my items collection, propose online websites where i can sell or trade this collection. Your answer doesn't need to be long. Don't use '*' character in your response."
     ),
     PROPOSE_NEW_ITEMS(""),
     PREDICT_VALUE_CHANGE("")

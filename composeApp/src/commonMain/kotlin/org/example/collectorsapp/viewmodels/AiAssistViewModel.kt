@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.Content
+import dev.shreyaspatil.ai.client.generativeai.type.RequestOptions
+import dev.shreyaspatil.ai.client.generativeai.type.Tool
 import dev.shreyaspatil.ai.client.generativeai.type.content
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -26,24 +28,51 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
     private var _state = MutableStateFlow(AiAssistViewState())
     val state = _state.asStateFlow()
 
-    fun useAiAction(action: AiActions?, collectionId: Long?) {
+    fun setAiAction(action: AiActions) {
+        _state.update {
+            it.copy(
+                selectedAiAction = action,
+                targetCollectionId = it.targetCollectionId,
+                response = it.response,
+                errorMessage = it.errorMessage,
+                isAwaitingResponse = it.isAwaitingResponse,
+                showError = it.showError
+            )
+        }
+    }
+
+    fun setCollectionId(collectionId: Long) {
+        _state.update {
+            it.copy(
+                selectedAiAction = it.selectedAiAction,
+                targetCollectionId = collectionId,
+                response = it.response,
+                errorMessage = it.errorMessage,
+                isAwaitingResponse = it.isAwaitingResponse,
+                showError = it.showError
+            )
+        }
+    }
+
+    fun useAiAction() {
         try {
-            _state.update {
-                it.copy(
-                    selectedAiAction = action,
-                    targetCollectionId = collectionId,
-                    response = null,
-                    errorMessage = null,
-                    isAwaitingResponse = true,
-                    showError = false
-                )
-            }
+            val action = state.value.selectedAiAction
+            val collectionId = state.value.targetCollectionId
 
             if (action != null && collectionId != null) {
                 viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            selectedAiAction = action,
+                            targetCollectionId = collectionId,
+                            response = null,
+                            errorMessage = null,
+                            isAwaitingResponse = true,
+                            showError = false
+                        )
+                    }
+
                     val geminiApiKey = settingsDao.getApiKey()
-                    val currency = settingsDao.getCurrency()
-                    val collectionValue = itemDao.getTotalValueByCollectionId(collectionId)
 
                     if (geminiApiKey.isBlank()) {
                         cancelAndShowError("No gemini API key provided. Make sure to provide valid API key in settings tab")
@@ -52,34 +81,35 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
 
                     val generativeModel = GenerativeModel(
                         modelName = modelName,
-                        apiKey = geminiApiKey
+                        apiKey = geminiApiKey,
                     )
 
-                    val inputContent = content {
-                        text(action.prompt)
-                        text("$collectionValue $currency")
-                    }
+                    val inputContent = getRequestContent(action, collectionId)
 
-                    aiRequest = launch {
-                        try {
-                            withTimeout(15_000) {
-                                _state.update {
-                                    it.copy(
-                                        selectedAiAction = it.selectedAiAction,
-                                        targetCollectionId = it.targetCollectionId,
-                                        response = null,
-                                        errorMessage = null,
-                                        isAwaitingResponse = true,
-                                        showError = false
-                                    )
+                    if (inputContent != null) {
+                        aiRequest = launch {
+                            try {
+                                withTimeout(15_000) {
+                                    _state.update {
+                                        it.copy(
+                                            selectedAiAction = it.selectedAiAction,
+                                            targetCollectionId = it.targetCollectionId,
+                                            response = null,
+                                            errorMessage = null,
+                                            isAwaitingResponse = true,
+                                            showError = false
+                                        )
+                                    }
+                                    generateResponse(generativeModel, inputContent)
                                 }
-                                generateResponse(generativeModel, inputContent)
+                            } catch (e: Exception) {
+                                cancelAndShowError("Failed to generate response for given request. Check your internet connection and make sure your API key is valid.")
+                                this.cancel()
                             }
                         }
-                        catch (e: Exception) {
-                            cancelAndShowError("Failed to generate response for given request. Check your internet connection and make sure your API key is valid.")
-                            this.cancel()
-                        }
+                    }
+                    else {
+                        cancelAndShowError("Failed to generate response for given request")
                     }
                 }
             } else {
@@ -108,6 +138,27 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
         }
         else {
             cancelAndShowError("Failed to generate response for given request")
+        }
+    }
+
+    private suspend fun getRequestContent(action: AiActions, collectionId: Long) : Content? {
+        return when (action) {
+            AiActions.PROPOSE_MARKETPLACES ->  {
+                    val collection = collectionDao.getCollectionById(collectionId)
+                    if (collection != null) {
+                        content {
+                            text("${action.prompt}\n")
+                            text("${collection.name}\n")
+                            collection.description?.let {
+                                text("$it\n")
+                            }
+                            text("${collection.category.name}\n")
+                        }
+                    }
+                    else null
+                }
+            AiActions.PROPOSE_NEW_ITEMS -> TODO()
+            AiActions.PREDICT_VALUE_CHANGE -> TODO()
         }
     }
 

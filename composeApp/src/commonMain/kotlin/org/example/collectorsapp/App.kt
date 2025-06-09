@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,6 +39,7 @@ import org.example.collectorsapp.ui.theme.rippleConfiguration
 import org.example.collectorsapp.ui.views.ai.AiAssistView
 import org.example.collectorsapp.ui.views.collections.AddEditCollectionView
 import org.example.collectorsapp.ui.views.collections.CollectionDetailView
+import org.example.collectorsapp.ui.views.collections.CollectionsPickView
 import org.example.collectorsapp.ui.views.collections.CollectionsView
 import org.example.collectorsapp.ui.views.items.AddEditItemView
 import org.example.collectorsapp.ui.views.items.ItemDetailView
@@ -81,6 +83,7 @@ fun App(repository: CollectionDatabase) {
                                 onDelete = deleteAction
                             )
                         }
+                        TopAppBarType.None -> {}
                     }
                 },
                 bottomBar = { if (showBottomAppBar) {
@@ -112,8 +115,15 @@ fun App(repository: CollectionDatabase) {
                         topAppBarType = TopAppBarType.TitleOnly
                     }
                     composable<NavigationDestination.AiAssistView> {
+                        val args = it.toRoute<NavigationDestination.AiAssistView>()
+                        args.collectionId?.let {collectionId ->
+                            aiAssistViewModel.setCollectionId(collectionId)
+                        }
                         AiAssistView(
                             viewModel = aiAssistViewModel,
+                            onActionClick = {
+                                navController.navigate(NavigationDestination.CollectionsPickView)
+                            },
                             modifier = Modifier.padding(12.dp, 0.dp)
                         )
                         showBottomAppBar = true
@@ -161,6 +171,17 @@ fun App(repository: CollectionDatabase) {
                         editAction = {
                             navController.navigate(NavigationDestination.AddEditCollectionView(args.collectionId))
                         }
+                    }
+                    composable<NavigationDestination.CollectionsPickView> {
+                        CollectionsPickView(
+                            viewModel = collectionsViewModel,
+                            onCollectionClick = { collectionId ->
+                                navController.navigate(NavigationDestination.AiAssistView(collectionId)) },
+                            currency = settingsState.currencyUI.name,
+                            modifier = Modifier.padding(12.dp, 4.dp)
+                        )
+                        showBottomAppBar = false
+                        topAppBarType = TopAppBarType.None
                     }
 
                     // Items destinations
@@ -210,9 +231,11 @@ object NavigationDestination {
     @Serializable
     object CollectionsView
     @Serializable
-    object AiAssistView
+    data class AiAssistView(val collectionId: Long? = null)
     @Serializable
     object SettingsView
+    @Serializable
+    object CollectionsPickView
     @Serializable
     data class AddEditCollectionView(val collectionId: Long? = null)
     @Serializable
@@ -226,5 +249,6 @@ object NavigationDestination {
 enum class TopAppBarType {
     TitleOnly,
     AddEdit,
-    DetailTopBar
+    DetailTopBar,
+    None
 }

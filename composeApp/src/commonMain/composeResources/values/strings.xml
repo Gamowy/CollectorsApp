@@ -72,8 +72,8 @@
     <string name="link_gemini_text">ai.google.dev/</string>
 
     <!-- String resources for AI Actions -->
-    <string name="ai_action_currency_conversion">Currency conversion</string>
-    <string name="ai_action_currency_conversion_description">"Display value of a selected collection in other currencies"</string>
+    <string name="ai_action_propose_marketplaces">Propose marketplaces</string>
+    <string name="ai_action_propose_marketplaces_description">Propose marketplaces where you can sell your collection</string>
     <string name="ai_action_propose_items">Propose new items</string>
     <string name="ai_action_item_proposal_description">"Propose new items for a selected collection"</string>
     <string name="ai_action_predict_value_change">Predict value change</string>

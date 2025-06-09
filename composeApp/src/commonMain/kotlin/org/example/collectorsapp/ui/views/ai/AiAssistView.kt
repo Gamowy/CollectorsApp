@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.ai_action_currency_conversion
-import kotlinproject.composeapp.generated.resources.ai_action_currency_conversion_description
 import kotlinproject.composeapp.generated.resources.ai_action_item_proposal_description
 import kotlinproject.composeapp.generated.resources.ai_action_predict_value_change
 import kotlinproject.composeapp.generated.resources.ai_action_propose_items
+import kotlinproject.composeapp.generated.resources.ai_action_propose_marketplaces
+import kotlinproject.composeapp.generated.resources.ai_action_propose_marketplaces_description
 import kotlinproject.composeapp.generated.resources.ai_action_value_change_description
 import kotlinproject.composeapp.generated.resources.chart_line_variant
 import kotlinproject.composeapp.generated.resources.currency_usd
@@ -41,10 +43,10 @@ data class AssistChipContent(val label: StringResource, val description: StringR
 
 val aiAssistChips = listOf(
     AssistChipContent(
-        label = Res.string.ai_action_currency_conversion,
-        description = Res.string.ai_action_currency_conversion_description,
+        label = Res.string.ai_action_propose_marketplaces,
+        description = Res.string.ai_action_propose_marketplaces_description,
         icon = Res.drawable.currency_usd,
-        action = AiActions.CURRENCY_CONVERSION
+        action = AiActions.PROPOSE_MARKETPLACES
     ),
     AssistChipContent(
         label = Res.string.ai_action_propose_items,
@@ -63,6 +65,7 @@ val aiAssistChips = listOf(
 @Composable
 fun AiAssistView(
     viewModel: AiAssistViewModel,
+    onActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -79,23 +82,39 @@ fun AiAssistView(
             isErrorDialog = true)
     }
 
-    Column(modifier = modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
+    if(state.selectedAiAction != null && state.targetCollectionId != null) {
+        viewModel.useAiAction()
+    }
+
+    Column(verticalArrangement = Arrangement.Bottom,
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = state.response ?: "",
-            modifier = Modifier
-                .fillMaxSize()
+        Box(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .weight(0.75f)
-        )
+        ) {
+            if(state.isAwaitingResponse) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .align(Alignment.Center)
+                )
+            }
+            else {
+                Text(
+                    text = state.response ?: "",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
         FlowRow(
             horizontalArrangement = Arrangement.Center,
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
-                .fillMaxSize()
-                .weight(0.25f)
+                .fillMaxWidth()
         ) {
             for (chip in aiAssistChips) {
                 AssistChip(
@@ -109,7 +128,8 @@ fun AiAssistView(
                         )
                     },
                     onClick = {
-                        viewModel.useAiAction(chip.action, 8)
+                        viewModel.setAiAction(chip.action)
+                        onActionClick()
                     }
                 )
                 Spacer(modifier = Modifier.width(10.dp))

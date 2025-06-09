@@ -39,7 +39,7 @@ val navigationItems = listOf(
     NavigationItem(
         title = Res.string.button_gemini_title,
         icon = Res.drawable.gemini,
-        route = NavigationDestination.AiAssistView
+        route = NavigationDestination.AiAssistView()
     ),
     NavigationItem(
         title = Res.string.button_settings_title,
