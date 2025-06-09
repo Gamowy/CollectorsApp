@@ -16,6 +16,7 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.button_gemini_title
 import kotlinproject.composeapp.generated.resources.button_home_title
 import kotlinproject.composeapp.generated.resources.button_settings_title
+import kotlinproject.composeapp.generated.resources.diamond_outline
 import kotlinproject.composeapp.generated.resources.gemini
 import kotlinproject.composeapp.generated.resources.home
 import kotlinproject.composeapp.generated.resources.settings
@@ -32,13 +33,13 @@ data class NavigationItem(val title: StringResource, val icon: DrawableResource,
 val navigationItems = listOf(
     NavigationItem(
         title = Res.string.button_home_title,
-        icon = Res.drawable.home,
+        icon = Res.drawable.diamond_outline,
         route = NavigationDestination.CollectionsView
     ),
     NavigationItem(
         title = Res.string.button_gemini_title,
         icon = Res.drawable.gemini,
-        route = NavigationDestination.GeminiView
+        route = NavigationDestination.AiAssistView
     ),
     NavigationItem(
         title = Res.string.button_settings_title,

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PopupDialog(popUpText: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun PopupDialog(popUpText: String, onConfirm: () -> Unit, onDismiss: () -> Unit, isErrorDialog: Boolean = false) {
     BasicAlertDialog(
         onDismissRequest = {
             onDismiss()
@@ -42,12 +42,19 @@ fun PopupDialog(popUpText: String, onConfirm: () -> Unit, onDismiss: () -> Unit)
                         TextButton(
                             onClick = { onDismiss() },
                         ) {
-                            Text("Cancel")
+                            if(!isErrorDialog) {
+                                Text("Cancel")
+                            }
                         }
                         TextButton(
                             onClick = { onConfirm() },
                         ) {
-                            Text("Confirm")
+                            if (!isErrorDialog) {
+                                Text("Confirm")
+                            }
+                            else {
+                                Text("OK")
+                            }
                         }
                     }
                 }

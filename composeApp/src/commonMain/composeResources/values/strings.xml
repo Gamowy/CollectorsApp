@@ -11,9 +11,9 @@
     <!-- TopBar -->
     <string name="top_bar_back_button_description">Back</string>
     <!-- NavBar -->
-    <string name="button_home_title">Home</string>
+    <string name="button_home_title">Collections</string>
     <string name="button_settings_title">Settings</string>
-    <string name="button_gemini_title">Gemini</string>
+    <string name="button_gemini_title">AI Assist</string>
     <string name="string_icon">Icon</string>
     <!-- SearchBar -->
     <string name="search_bar_hint">Search for collection...</string>
@@ -70,4 +70,12 @@
 
     <string name="link_gemini">https://ai.google.dev/</string>
     <string name="link_gemini_text">ai.google.dev/</string>
+
+    <!-- String resources for AI Actions -->
+    <string name="ai_action_currency_conversion">Currency conversion</string>
+    <string name="ai_action_currency_conversion_description">"Display value of a selected collection in other currencies"</string>
+    <string name="ai_action_propose_items">Propose new items</string>
+    <string name="ai_action_item_proposal_description">"Propose new items for a selected collection"</string>
+    <string name="ai_action_predict_value_change">Predict value change</string>
+    <string name="ai_action_value_change_description">Predict value change of collection items over time</string>
 </resources>

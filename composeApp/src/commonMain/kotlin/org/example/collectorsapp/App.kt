@@ -35,13 +35,14 @@ import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
 import org.example.collectorsapp.ui.theme.DarkColorScheme
 import org.example.collectorsapp.ui.theme.LightColorScheme
 import org.example.collectorsapp.ui.theme.rippleConfiguration
+import org.example.collectorsapp.ui.views.ai.AiAssistView
 import org.example.collectorsapp.ui.views.collections.AddEditCollectionView
 import org.example.collectorsapp.ui.views.collections.CollectionDetailView
 import org.example.collectorsapp.ui.views.collections.CollectionsView
-import org.example.collectorsapp.ui.views.gemini.GeminiView
 import org.example.collectorsapp.ui.views.items.AddEditItemView
 import org.example.collectorsapp.ui.views.items.ItemDetailView
 import org.example.collectorsapp.ui.views.settings.SettingsView
+import org.example.collectorsapp.viewmodels.AiAssistViewModel
 import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
 import org.example.collectorsapp.viewmodels.CollectionsListViewModel
 import org.example.collectorsapp.viewmodels.ItemDetailsViewmodel
@@ -90,6 +91,7 @@ fun App(repository: CollectionDatabase) {
             ) { it ->
                 val collectionsViewModel = viewModel { CollectionsListViewModel(repository) }
                 val settingsViewModel = viewModel { SettingsViewModel(repository) }
+                val aiAssistViewModel = viewModel { AiAssistViewModel(repository, "gemini-2.0-flash") }
                 val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
                 val navGraph = navController.createGraph(startDestination = NavigationDestination.CollectionsView) {
@@ -109,8 +111,11 @@ fun App(repository: CollectionDatabase) {
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
-                    composable<NavigationDestination.GeminiView> {
-                        GeminiView(modifier = Modifier.padding(12.dp, 0.dp))
+                    composable<NavigationDestination.AiAssistView> {
+                        AiAssistView(
+                            viewModel = aiAssistViewModel,
+                            modifier = Modifier.padding(12.dp, 0.dp)
+                        )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
@@ -205,7 +210,7 @@ object NavigationDestination {
     @Serializable
     object CollectionsView
     @Serializable
-    object GeminiView
+    object AiAssistView
     @Serializable
     object SettingsView
     @Serializable
