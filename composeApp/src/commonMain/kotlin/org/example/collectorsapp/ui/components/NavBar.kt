@@ -31,32 +31,35 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 
-data class NavigationItem(val title: StringResource, val icon: DrawableResource, val route: Any)
+data class NavigationItem(val title: StringResource, val icon: DrawableResource, val route: Any, val routeString: String)
 
 val navigationItems = listOf(
     NavigationItem(
         title = Res.string.button_home_title,
         icon = Res.drawable.diamond_outline,
-        route = NavigationDestination.CollectionsView
+        route = NavigationDestination.CollectionsView,
+        routeString = "NavigationDestination.CollectionsView"
     ),
     NavigationItem(
         title = Res.string.button_gemini_title,
         icon = Res.drawable.gemini,
-        route = NavigationDestination.AiAssistView
+        route = NavigationDestination.AiAssistView,
+        routeString = "NavigationDestination.AiAssistView"
     ),
     NavigationItem(
         title = Res.string.button_settings_title,
         icon = Res.drawable.settings,
-        route = NavigationDestination.SettingsView
+        route = NavigationDestination.SettingsView,
+        routeString = "NavigationDestination.SettingsView"
+
     ),
 )
-
 
 @Composable
 fun NavBar(
     navController: NavController,
 ) {
-    var selectedIndex by remember { mutableStateOf(0)}
+    var selectedIndex by remember { mutableStateOf(getInitialIndex(navController))}
     NavigationBar(
         tonalElevation = 4.dp
     ) {
@@ -91,4 +94,14 @@ fun NavBar(
             )
         }
     }
+}
+
+private fun getInitialIndex(navController: NavController) : Int {
+    val currentRoute = navController.currentDestination?.route
+    if (currentRoute != null) {
+        val index = navigationItems.indexOfFirst { "org.example.collectorsapp.${it.routeString}" == currentRoute }
+        if (index != -1)
+            return index
+    }
+    return 0
 }
