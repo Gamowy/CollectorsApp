@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import org.example.collectorsapp.data.getCollectionDatabase
 import org.example.collectorsapp.data.getDatabaseBuilder
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
