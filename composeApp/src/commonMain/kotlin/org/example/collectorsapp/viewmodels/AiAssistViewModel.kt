@@ -155,8 +155,9 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
                     }
                     else null
                 }
-            AiActions.PROPOSE_NEW_ITEMS -> TODO()
-            AiActions.PREDICT_VALUE_CHANGE -> TODO()
+            AiActions.PROPOSE_NEW_ITEMS ->  null
+            AiActions.PREDICT_VALUE_CHANGE -> null
+            AiActions.GENERATE_COLLECTION_IMAGE -> null
         }
     }
 

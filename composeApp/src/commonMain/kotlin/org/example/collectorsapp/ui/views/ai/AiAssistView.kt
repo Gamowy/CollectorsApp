@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.ai_action_generate_collection_image
+import kotlinproject.composeapp.generated.resources.ai_action_generate_collection_image_description
 import kotlinproject.composeapp.generated.resources.ai_action_item_proposal_description
 import kotlinproject.composeapp.generated.resources.ai_action_predict_value_change
 import kotlinproject.composeapp.generated.resources.ai_action_propose_items
@@ -29,6 +31,7 @@ import kotlinproject.composeapp.generated.resources.ai_action_propose_marketplac
 import kotlinproject.composeapp.generated.resources.ai_action_value_change_description
 import kotlinproject.composeapp.generated.resources.chart_line_variant
 import kotlinproject.composeapp.generated.resources.currency_usd
+import kotlinproject.composeapp.generated.resources.image
 import kotlinproject.composeapp.generated.resources.lightbulb_question_outline
 import org.example.collectorsapp.model.AiActions
 import org.example.collectorsapp.ui.components.PopupDialog
@@ -58,6 +61,12 @@ val aiAssistChips = listOf(
         description = Res.string.ai_action_value_change_description,
         icon = Res.drawable.chart_line_variant,
         action = AiActions.PREDICT_VALUE_CHANGE
+    ),
+    AssistChipContent(
+        label = Res.string.ai_action_generate_collection_image,
+        description = Res.string.ai_action_generate_collection_image_description,
+        icon = Res.drawable.image,
+        action = AiActions.GENERATE_COLLECTION_IMAGE
     ),
 )
 

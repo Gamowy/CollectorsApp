@@ -77,4 +77,6 @@
     <string name="ai_action_item_proposal_description">"Propose new items for a selected collection"</string>
     <string name="ai_action_predict_value_change">Predict value change</string>
     <string name="ai_action_value_change_description">Predict value change of collection items over time</string>
+    <string name="ai_action_generate_collection_image">Generate collection image</string>
+    <string name="ai_action_generate_collection_image_description">Generate collection image based on it's name and description</string>
 </resources>
