@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
@@ -22,10 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.app_name
 import kotlinproject.composeapp.generated.resources.arrow_left
@@ -77,6 +76,7 @@ fun DetailTopBar(
                 content = {
                     Icon(
                         painter = painterResource(Res.drawable.arrow_left),
+                        tint = Color.Gray,
                         contentDescription = stringResource(Res.string.top_bar_back_button_description),
                         modifier = Modifier.size(35.dp).padding(4.dp)
                     )
@@ -88,6 +88,7 @@ fun DetailTopBar(
                 Icon(
                     painter = painterResource(Res.drawable.pencil),
                     contentDescription = stringResource(Res.string.edit_collection),
+                    tint = Color.Gray,
                     modifier = Modifier
                         .size(35.dp)
                         .padding(4.dp)
@@ -98,6 +99,7 @@ fun DetailTopBar(
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(
                     painter = painterResource(Res.drawable.delete),
+                    tint = Color.Gray,
                     contentDescription = stringResource(Res.string.delete_collection),
                     modifier = Modifier
                         .size(35.dp)
@@ -111,6 +113,6 @@ fun DetailTopBar(
         scrollBehavior = pinnedScrollBehavior(),
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(NavigationBarDefaults.Elevation, shape = MaterialTheme.shapes.large)
+            .shadow(4.dp)
     )
 }

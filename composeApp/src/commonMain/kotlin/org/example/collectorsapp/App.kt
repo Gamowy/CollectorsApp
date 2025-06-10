@@ -21,17 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
+import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.ui.components.NavBar
 import org.example.collectorsapp.ui.components.topbars.AddEditTopBar
 import org.example.collectorsapp.ui.components.topbars.DetailTopBar
+import org.example.collectorsapp.ui.components.topbars.PickCollectionTopBar
 import org.example.collectorsapp.ui.components.topbars.TitleOnlyTopBar
 import org.example.collectorsapp.ui.theme.DarkColorScheme
 import org.example.collectorsapp.ui.theme.LightColorScheme
@@ -83,7 +84,9 @@ fun App(repository: CollectionDatabase) {
                                 onDelete = deleteAction
                             )
                         }
-                        TopAppBarType.None -> {}
+                        TopAppBarType.PickCollectionTopBar -> {
+                            PickCollectionTopBar()
+                        }
                     }
                 },
                 bottomBar = { if (showBottomAppBar) {
@@ -109,22 +112,18 @@ fun App(repository: CollectionDatabase) {
                                 navController.navigate(NavigationDestination.AddEditCollectionView())
                             },
                             currency = settingsState.currencyUI.name,
-                            modifier = Modifier.padding(12.dp, 0.dp)
+                            modifier = Modifier.padding(12.dp)
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
                     }
                     composable<NavigationDestination.AiAssistView> {
-                        val args = it.toRoute<NavigationDestination.AiAssistView>()
-                        args.collectionId?.let {collectionId ->
-                            aiAssistViewModel.setCollectionId(collectionId)
-                        }
                         AiAssistView(
                             viewModel = aiAssistViewModel,
                             onActionClick = {
                                 navController.navigate(NavigationDestination.CollectionsPickView)
                             },
-                            modifier = Modifier.padding(12.dp, 0.dp)
+                            modifier = Modifier.padding(12.dp)
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
@@ -145,12 +144,12 @@ fun App(repository: CollectionDatabase) {
                             collectionId = args.collectionId,
                             viewModel = collectionsViewModel,
                             onBack = { navController.popBackStack() },
-                            modifier = Modifier.padding(4.dp, 0.dp)
+                            modifier = Modifier.padding(4.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
                     }
-                    composable<NavigationDestination.CollectionDetailView> { it ->
+                    composable<NavigationDestination.CollectionDetailView> {
                         val args = it.toRoute<NavigationDestination.CollectionDetailView>()
                         val viewModel  = viewModel { CollectionDetailViewModel(args.collectionId, repository) }
                         CollectionDetailView(
@@ -176,16 +175,20 @@ fun App(repository: CollectionDatabase) {
                         CollectionsPickView(
                             viewModel = collectionsViewModel,
                             onCollectionClick = { collectionId ->
-                                navController.navigate(NavigationDestination.AiAssistView(collectionId)) },
+                                aiAssistViewModel.setCollectionId(collectionId)
+                                navController.navigate(NavigationDestination.AiAssistView, navOptions  {
+                                    popUpTo(0) {inclusive = true}
+                                    launchSingleTop = true
+                                }) },
                             currency = settingsState.currencyUI.name,
-                            modifier = Modifier.padding(12.dp, 4.dp)
+                            modifier = Modifier.padding(12.dp)
                         )
                         showBottomAppBar = false
-                        topAppBarType = TopAppBarType.None
+                        topAppBarType = TopAppBarType.PickCollectionTopBar
                     }
 
                     // Items destinations
-                    composable<NavigationDestination.AddEditItemView> {it ->
+                    composable<NavigationDestination.AddEditItemView> {
                         val args = it.toRoute<NavigationDestination.AddEditItemView>()
                         val viewModel  = viewModel { CollectionDetailViewModel(args.collectionId, repository) }
                         AddEditItemView(
@@ -193,7 +196,7 @@ fun App(repository: CollectionDatabase) {
                             itemId = args.itemId,
                             viewModel = viewModel,
                             onBack = { navController.popBackStack() },
-                            modifier = Modifier.padding(4.dp, 0.dp)
+                            modifier = Modifier.padding(4.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
@@ -204,7 +207,7 @@ fun App(repository: CollectionDatabase) {
                         ItemDetailView(
                             viewModel = viewModel,
                             currency = settingsState.currencyUI.name,
-                            modifier = Modifier.padding(4.dp, 0.dp)
+                            modifier = Modifier.padding(4.dp)
                         )
                         deleteAction = {
                             viewModel.deleteItem()
@@ -231,7 +234,7 @@ object NavigationDestination {
     @Serializable
     object CollectionsView
     @Serializable
-    data class AiAssistView(val collectionId: Long? = null)
+    object AiAssistView
     @Serializable
     object SettingsView
     @Serializable
@@ -250,5 +253,5 @@ enum class TopAppBarType {
     TitleOnly,
     AddEdit,
     DetailTopBar,
-    None
+    PickCollectionTopBar
 }

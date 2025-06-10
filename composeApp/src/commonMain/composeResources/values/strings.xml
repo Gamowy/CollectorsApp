@@ -10,6 +10,7 @@
     <string name="add_collection">Add collection</string>
     <!-- TopBar -->
     <string name="top_bar_back_button_description">Back</string>
+    <string name="pick_collection_top_bar">Pick a collection</string>
     <!-- NavBar -->
     <string name="button_home_title">Collections</string>
     <string name="button_settings_title">Settings</string>
@@ -67,10 +68,8 @@
     <string name="settings_gemini_description">Configure your Gemini API key to enable AI features in the app. </string>
     <string name="gemini_link_description">Get your gemini API key from: </string>
     <string name="change_currency_description">Change the currency displayed in the app.</string>
-
     <string name="link_gemini">https://ai.google.dev/</string>
     <string name="link_gemini_text">ai.google.dev/</string>
-
     <!-- String resources for AI Actions -->
     <string name="ai_action_propose_marketplaces">Propose marketplaces</string>
     <string name="ai_action_propose_marketplaces_description">Propose marketplaces where you can sell your collection</string>

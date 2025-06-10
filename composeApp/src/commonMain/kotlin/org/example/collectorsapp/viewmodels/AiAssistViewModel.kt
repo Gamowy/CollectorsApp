@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.Content
-import dev.shreyaspatil.ai.client.generativeai.type.RequestOptions
-import dev.shreyaspatil.ai.client.generativeai.type.Tool
 import dev.shreyaspatil.ai.client.generativeai.type.content
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -32,7 +30,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
         _state.update {
             it.copy(
                 selectedAiAction = action,
-                targetCollectionId = it.targetCollectionId,
+                targetCollectionId = null,
                 response = it.response,
                 errorMessage = it.errorMessage,
                 isAwaitingResponse = it.isAwaitingResponse,
@@ -56,8 +54,8 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
 
     fun useAiAction() {
         try {
-            val action = state.value.selectedAiAction
-            val collectionId = state.value.targetCollectionId
+            val action = _state.value.selectedAiAction
+            val collectionId = _state.value.targetCollectionId
 
             if (action != null && collectionId != null) {
                 viewModelScope.launch {

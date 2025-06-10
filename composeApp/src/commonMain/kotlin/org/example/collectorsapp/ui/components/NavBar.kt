@@ -1,8 +1,11 @@
 package org.example.collectorsapp.ui.components
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.navOptions
 import kotlinproject.composeapp.generated.resources.Res
@@ -18,7 +22,6 @@ import kotlinproject.composeapp.generated.resources.button_home_title
 import kotlinproject.composeapp.generated.resources.button_settings_title
 import kotlinproject.composeapp.generated.resources.diamond_outline
 import kotlinproject.composeapp.generated.resources.gemini
-import kotlinproject.composeapp.generated.resources.home
 import kotlinproject.composeapp.generated.resources.settings
 import kotlinproject.composeapp.generated.resources.string_icon
 import org.example.collectorsapp.NavigationDestination
@@ -39,7 +42,7 @@ val navigationItems = listOf(
     NavigationItem(
         title = Res.string.button_gemini_title,
         icon = Res.drawable.gemini,
-        route = NavigationDestination.AiAssistView()
+        route = NavigationDestination.AiAssistView
     ),
     NavigationItem(
         title = Res.string.button_settings_title,
@@ -51,10 +54,12 @@ val navigationItems = listOf(
 
 @Composable
 fun NavBar(
-    navController: NavController
+    navController: NavController,
 ) {
     var selectedIndex by remember { mutableStateOf(0)}
-    NavigationBar {
+    NavigationBar(
+        tonalElevation = 4.dp
+    ) {
         navigationItems.forEachIndexed { index, item ->
             NavigationBarItem(
                 onClick = {
@@ -73,17 +78,17 @@ fun NavBar(
                         tint = Color.Black,
                     )
                 },
-                selected = selectedIndex == index
+                selected = selectedIndex == index,
+                colors = NavigationBarItemColors(
+                    selectedIconColor = NavigationBarItemDefaults.colors().selectedIconColor,
+                    selectedTextColor = NavigationBarItemDefaults.colors().selectedTextColor,
+                    selectedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = NavigationBarItemDefaults.colors().unselectedIconColor,
+                    unselectedTextColor = NavigationBarItemDefaults.colors().unselectedTextColor,
+                    disabledIconColor = NavigationBarItemDefaults.colors().disabledIconColor,
+                    disabledTextColor = NavigationBarItemDefaults.colors().disabledTextColor
+                )
             )
-        }
-    }
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        val currentRoute = destination.route
-        val currentIndex = navigationItems.indexOfFirst { it.route == currentRoute }
-        selectedIndex = if (currentIndex != -1) {
-            currentIndex
-        } else {
-            0
         }
     }
 }
