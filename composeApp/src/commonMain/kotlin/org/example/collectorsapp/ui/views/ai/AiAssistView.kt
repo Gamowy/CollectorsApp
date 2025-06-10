@@ -1,5 +1,6 @@
 package org.example.collectorsapp.ui.views.ai
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -123,6 +124,7 @@ fun AiAssistView(
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
                 .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
         ) {
             for (chip in aiAssistChips) {
                 AssistChip(
