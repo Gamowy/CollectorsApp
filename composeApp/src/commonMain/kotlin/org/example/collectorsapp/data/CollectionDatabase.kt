@@ -1,5 +1,6 @@
 package org.example.collectorsapp.data
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
@@ -14,6 +15,7 @@ import org.example.collectorsapp.model.ItemsCollection
 import org.example.collectorsapp.model.UserSettings
 
 @Database(entities = [ItemsCollection::class, Item::class, UserSettings::class], version = 1, exportSchema = false)
+@ConstructedBy(CollectionDatabaseConstructor::class)
 abstract class CollectionDatabase : RoomDatabase() {
     abstract fun getCollectionDao(): ItemsCollectionDao
     abstract fun getItemsDao(): ItemsDao

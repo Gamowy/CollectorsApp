@@ -138,7 +138,9 @@ fun CollectionCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.align(Alignment.BottomEnd)
+                        modifier = Modifier.align(Alignment.BottomEnd),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }

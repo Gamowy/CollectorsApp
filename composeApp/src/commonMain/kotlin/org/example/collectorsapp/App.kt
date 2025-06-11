@@ -70,7 +70,7 @@ fun App(repository: CollectionDatabase) {
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(if (darkTheme) MaterialTheme.colorScheme.surfaceContainer else Color.Transparent)
+                    .background(if (darkTheme) MaterialTheme.colorScheme.surfaceContainer else Color.White)
                     .windowInsetsPadding(WindowInsets.safeDrawing),
                 topBar = {
                     when (topAppBarType) {
