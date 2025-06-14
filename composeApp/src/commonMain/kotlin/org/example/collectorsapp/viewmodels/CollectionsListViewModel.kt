@@ -56,6 +56,70 @@ class CollectionsListViewModel(private val repository: CollectionDatabase) : Vie
         return _state.value.collectionsList.find { it.collection.collectionId == collectionId }
     }
 
+    fun getAllCollectionsSortedByNameAsc(){
+        viewModelScope.launch {
+            collectionDao.getAllCollectionsSortedByNameAsc().collectLatest { collections ->
+                val list = collections.map { collection ->
+                    CollectionCardState(collection, getCollectionValue(collection.collectionId))
+                }
+                _state.update {
+                    it.copy(
+                        collectionsList = list,
+                        searchResultsList = list
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllCollectionsSortedByNameDesc(){
+        viewModelScope.launch {
+            collectionDao.getAllCollectionsSortedByNameDesc().collectLatest { collections ->
+                val list = collections.map { collection ->
+                    CollectionCardState(collection, getCollectionValue(collection.collectionId))
+                }
+                _state.update {
+                    it.copy(
+                        collectionsList = list,
+                        searchResultsList = list
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllCollectionsSortedByCategoryAsc(){
+        viewModelScope.launch {
+            collectionDao.getAllCollectionsSortedByCategoryAsc().collectLatest { collections ->
+                val list = collections.map { collection ->
+                    CollectionCardState(collection, getCollectionValue(collection.collectionId))
+                }
+                _state.update {
+                    it.copy(
+                        collectionsList = list,
+                        searchResultsList = list
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllCollectionsSortedByCategoryDesc(){
+        viewModelScope.launch {
+            collectionDao.getAllCollectionsSortedByCategoryDesc().collectLatest { collections ->
+                val list = collections.map { collection ->
+                    CollectionCardState(collection, getCollectionValue(collection.collectionId))
+                }
+                _state.update {
+                    it.copy(
+                        collectionsList = list,
+                        searchResultsList = list
+                    )
+                }
+            }
+        }
+    }
+
     fun searchCollections(query: String) {
         _state.update {
             it.copy (
@@ -72,5 +136,13 @@ class CollectionsListViewModel(private val repository: CollectionDatabase) : Vie
 
     private suspend fun getCollectionValue(collectionId: Long): Double  {
         return itemsDao.getTotalValueByCollectionId(collectionId) ?: 0.0
+    }
+
+    fun sortByValueAsc() {
+        _state.update { it.copy(searchResultsList = it.searchResultsList.sortedBy { state -> state.collectionValue }) }
+    }
+
+    fun sortByValueDesc() {
+        _state.update { it.copy(searchResultsList = it.searchResultsList.sortedByDescending { state -> state.collectionValue }) }
     }
 }

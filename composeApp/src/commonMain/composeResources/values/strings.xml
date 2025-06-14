@@ -79,4 +79,10 @@
     <string name="ai_action_value_change_description">Predict value change of collection items over time</string>
     <string name="ai_action_generate_collection_image">Generate collection image</string>
     <string name="ai_action_generate_collection_image_description">Generate collection image based on it's name and description</string>
+    <!-- SortButton -->
+    <string name="sort_category">By Category</string>
+    <string name="sort_condition">By Condition</string>
+    <string name="sort_name">By Name</string>
+    <string name="sort_value">By Value</string>
+    <string name="button_sort">Sort Collections/Items</string>
 </resources>
