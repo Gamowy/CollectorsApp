@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -70,7 +69,7 @@ fun App(repository: CollectionDatabase) {
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(if (darkTheme) MaterialTheme.colorScheme.surfaceContainer else Color.White)
+                    .background(if (darkTheme) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surfaceContainer)
                     .windowInsetsPadding(WindowInsets.safeDrawing),
                 topBar = {
                     when (topAppBarType) {
@@ -115,7 +114,7 @@ fun App(repository: CollectionDatabase) {
                                 navController.navigate(NavigationDestination.AddEditCollectionView())
                             },
                             currency = settingsState.currencyUI.name,
-                            modifier = Modifier.padding(12.dp)
+                            modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
@@ -126,7 +125,7 @@ fun App(repository: CollectionDatabase) {
                             onActionClick = {
                                 navController.navigate(NavigationDestination.CollectionsPickView)
                             },
-                            modifier = Modifier.padding(12.dp)
+                            modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
@@ -134,7 +133,7 @@ fun App(repository: CollectionDatabase) {
                     composable<NavigationDestination.SettingsView> {
                         SettingsView(
                             viewModel = settingsViewModel,
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.padding(8.dp, 8.dp, 8.dp, 0.dp)
                         )
                         showBottomAppBar = true
                         topAppBarType = TopAppBarType.TitleOnly
@@ -147,7 +146,7 @@ fun App(repository: CollectionDatabase) {
                             collectionId = args.collectionId,
                             viewModel = collectionsViewModel,
                             onBack = { navController.popBackStack() },
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(4.dp, 4.dp, 4.dp, 0.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
@@ -184,7 +183,7 @@ fun App(repository: CollectionDatabase) {
                                     launchSingleTop = true
                                 }) },
                             currency = settingsState.currencyUI.name,
-                            modifier = Modifier.padding(12.dp)
+                            modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.PickCollectionTopBar
@@ -199,7 +198,7 @@ fun App(repository: CollectionDatabase) {
                             itemId = args.itemId,
                             viewModel = viewModel,
                             onBack = { navController.popBackStack() },
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(4.dp, 4.dp, 4.dp, 0.dp)
                         )
                         showBottomAppBar = false
                         topAppBarType = TopAppBarType.AddEdit
@@ -210,7 +209,7 @@ fun App(repository: CollectionDatabase) {
                         ItemDetailView(
                             viewModel = viewModel,
                             currency = settingsState.currencyUI.name,
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(4.dp, 4.dp, 4.dp, 0.dp)
                         )
                         deleteAction = {
                             viewModel.deleteItem()

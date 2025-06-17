@@ -73,8 +73,8 @@
     <!-- String resources for AI Actions -->
     <string name="ai_action_propose_marketplaces">Propose marketplaces</string>
     <string name="ai_action_propose_marketplaces_description">Propose marketplaces where you can sell your collection</string>
-    <string name="ai_action_propose_items">Propose new items</string>
-    <string name="ai_action_item_proposal_description">"Propose new items for a selected collection"</string>
+    <string name="ai_action_propose_items">Suggest new items</string>
+    <string name="ai_action_item_proposal_description">"Suggest new items for a selected collection"</string>
     <string name="ai_action_predict_value_change">Predict value change</string>
     <string name="ai_action_value_change_description">Predict value change of collection items over time</string>
     <string name="ai_action_generate_collection_image">Generate collection image</string>

@@ -1,6 +1,5 @@
 package org.example.collectorsapp.ui.views.ai
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,11 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.ai_action_generate_collection_image
-import kotlinproject.composeapp.generated.resources.ai_action_generate_collection_image_description
 import kotlinproject.composeapp.generated.resources.ai_action_item_proposal_description
 import kotlinproject.composeapp.generated.resources.ai_action_predict_value_change
 import kotlinproject.composeapp.generated.resources.ai_action_propose_items
@@ -32,7 +31,6 @@ import kotlinproject.composeapp.generated.resources.ai_action_propose_marketplac
 import kotlinproject.composeapp.generated.resources.ai_action_value_change_description
 import kotlinproject.composeapp.generated.resources.chart_line_variant
 import kotlinproject.composeapp.generated.resources.currency_usd
-import kotlinproject.composeapp.generated.resources.image
 import kotlinproject.composeapp.generated.resources.lightbulb_question_outline
 import org.example.collectorsapp.model.AiActions
 import org.example.collectorsapp.ui.components.PopupDialog
@@ -55,19 +53,13 @@ val aiAssistChips = listOf(
         label = Res.string.ai_action_propose_items,
         description = Res.string.ai_action_item_proposal_description,
         icon = Res.drawable.lightbulb_question_outline,
-        action = AiActions.PROPOSE_NEW_ITEMS
+        action = AiActions.SUGGEST_NEW_ITEMS
     ),
     AssistChipContent(
         label = Res.string.ai_action_predict_value_change,
         description = Res.string.ai_action_value_change_description,
         icon = Res.drawable.chart_line_variant,
         action = AiActions.PREDICT_VALUE_CHANGE
-    ),
-    AssistChipContent(
-        label = Res.string.ai_action_generate_collection_image,
-        description = Res.string.ai_action_generate_collection_image_description,
-        icon = Res.drawable.image,
-        action = AiActions.GENERATE_COLLECTION_IMAGE
     ),
 )
 
@@ -113,10 +105,20 @@ fun AiAssistView(
                 )
             }
             else {
-                Text(
-                    text = state.response ?: "",
-                    modifier = Modifier.fillMaxSize()
-                )
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (!state.header.isNullOrBlank()) {
+                        Text(
+                            text = state.header ?: "",
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.fillMaxSize().align(Alignment.CenterHorizontally)
+                        )
+                    }
+                    Text(
+                        text = state.response ?: "",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
         FlowRow(
@@ -124,7 +126,6 @@ fun AiAssistView(
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
         ) {
             for (chip in aiAssistChips) {
                 AssistChip(

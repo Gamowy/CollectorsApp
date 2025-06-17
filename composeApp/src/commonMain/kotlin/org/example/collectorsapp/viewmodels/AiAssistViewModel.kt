@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
@@ -16,7 +17,7 @@ import org.example.collectorsapp.data.CollectionDatabase
 import org.example.collectorsapp.model.AiActions
 import org.example.collectorsapp.ui.views.ai.AiAssistViewState
 
-class AiAssistViewModel(private val repository: CollectionDatabase, private val modelName: String) : ViewModel() {
+class AiAssistViewModel(repository: CollectionDatabase, private val modelName: String) : ViewModel() {
     private var collectionDao = repository.getCollectionDao()
     private var itemDao = repository.getItemsDao()
     private var settingsDao = repository.getUserSettingsDao()
@@ -31,6 +32,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
             it.copy(
                 selectedAiAction = action,
                 targetCollectionId = null,
+                header = it.header,
                 response = it.response,
                 errorMessage = it.errorMessage,
                 isAwaitingResponse = it.isAwaitingResponse,
@@ -44,6 +46,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
             it.copy(
                 selectedAiAction = it.selectedAiAction,
                 targetCollectionId = collectionId,
+                header = it.header,
                 response = it.response,
                 errorMessage = it.errorMessage,
                 isAwaitingResponse = it.isAwaitingResponse,
@@ -63,6 +66,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
                         it.copy(
                             selectedAiAction = action,
                             targetCollectionId = collectionId,
+                            header = null,
                             response = null,
                             errorMessage = null,
                             isAwaitingResponse = true,
@@ -92,6 +96,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
                                         it.copy(
                                             selectedAiAction = it.selectedAiAction,
                                             targetCollectionId = it.targetCollectionId,
+                                            header = null,
                                             response = null,
                                             errorMessage = null,
                                             isAwaitingResponse = true,
@@ -121,13 +126,14 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
     }
 
     private suspend fun generateResponse(model: GenerativeModel, input: Content) {
-        val responseText = model.generateContent(input).text
-        if (responseText != null) {
+        val response = model.generateContent(input).text?.replace("*", "")
+        if (response != null) {
             _state.update {
                 it.copy(
                     selectedAiAction = null,
                     targetCollectionId = null,
-                    response = responseText,
+                    header = state.value.selectedAiAction?.name?.replace('_', ' ') ?: "",
+                    response = response,
                     errorMessage = null,
                     isAwaitingResponse = false,
                     showError = false
@@ -140,25 +146,38 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
     }
 
     private suspend fun getRequestContent(action: AiActions, collectionId: Long) : Content? {
-        return when (action) {
-            AiActions.PROPOSE_MARKETPLACES ->  {
-                    val collection = collectionDao.getCollectionById(collectionId)
-                    if (collection != null) {
-                        content {
-                            text("${action.prompt}\n")
-                            text("${collection.name}\n")
-                            collection.description?.let {
-                                text("$it\n")
-                            }
-                            text("${collection.category.name}\n")
+        val collection = collectionDao.getCollectionById(collectionId)
+        val items = itemDao.getItemsByCollectionId(collectionId).first()
+        val currency = settingsDao.getCurrency()
+        if (collection != null) {
+            return when (action) {
+                AiActions.PROPOSE_MARKETPLACES -> {
+                    content {
+                        text("${action.prompt}\n")
+                        text("${collection.name}\n")
+                        collection.description?.let {
+                            text("$it\n")
                         }
+                        text("${collection.category.name}\n")
                     }
-                    else null
                 }
-            AiActions.PROPOSE_NEW_ITEMS ->  null
-            AiActions.PREDICT_VALUE_CHANGE -> null
-            AiActions.GENERATE_COLLECTION_IMAGE -> null
+                AiActions.SUGGEST_NEW_ITEMS -> {
+                    val itemsString = items.joinToString {it.name}
+                    content {
+                        text("${action.prompt}\n")
+                        text(itemsString)
+                    }
+                }
+                AiActions.PREDICT_VALUE_CHANGE -> {
+                    val itemsString = items.joinToString { "${it.name}: ${it.estimatedValue}${currency}" }
+                    content {
+                        text("${action.prompt}\n")
+                        text(itemsString)
+                    }
+                }
+            }
         }
+        else return null
     }
 
     private fun cancelAndShowError(error: String) {
@@ -167,6 +186,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
             it.copy(
                 selectedAiAction = null,
                 targetCollectionId = null,
+                header = null,
                 response = null,
                 errorMessage = error,
                 isAwaitingResponse = false,
@@ -180,6 +200,7 @@ class AiAssistViewModel(private val repository: CollectionDatabase, private val 
             it.copy(
                 selectedAiAction = null,
                 targetCollectionId = null,
+                header = null,
                 response = null,
                 errorMessage = null,
                 isAwaitingResponse = false,
