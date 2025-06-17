@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -31,7 +32,7 @@ fun CollectionsPickView(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Box (modifier = modifier
+    Box (modifier = Modifier
         .fillMaxSize()
     ) {
         LazyColumn(
@@ -48,7 +49,10 @@ fun CollectionsPickView(
                     Box(modifier = modifier.weight(0.15f)){
                         SortButton(
                             modifier = Modifier
-                                .size(35.dp),
+                                .size(35.dp)
+                                .padding(4.dp)
+                                .align(Alignment.Center)
+                            ,
                             textCategoryConditionASC = stringResource(Res.string.sort_category),
                             textCategoryConditionDESC = stringResource(Res.string.sort_category),
                             onNameAscClick = { viewModel.getAllCollectionsSortedByNameAsc() },
@@ -69,7 +73,7 @@ fun CollectionsPickView(
                     collectionValue = collectionState.collectionValue,
                     onClick = { onCollectionClick(collectionState.collection.collectionId) },
                     currency = currency,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.padding(12.dp).animateItem(),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }

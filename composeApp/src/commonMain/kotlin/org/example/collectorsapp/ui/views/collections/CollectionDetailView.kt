@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -29,9 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -48,7 +45,6 @@ import kotlinproject.composeapp.generated.resources.placeholder
 import kotlinproject.composeapp.generated.resources.plus
 import kotlinproject.composeapp.generated.resources.search_items_hint
 import kotlinproject.composeapp.generated.resources.sort_condition
-import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.ui.components.FabButton
 import org.example.collectorsapp.ui.components.ItemCard
 import org.example.collectorsapp.ui.components.SearchBar
@@ -182,7 +178,8 @@ fun CollectionDetailView(
                         SortButton(
                             modifier = Modifier
                                 .size(35.dp)
-                                .padding(4.dp),
+                                .padding(4.dp)
+                                .align(Alignment.Center),
                             textCategoryConditionASC = stringResource(Res.string.sort_condition),
                             textCategoryConditionDESC = stringResource(Res.string.sort_condition),
                             onNameAscClick = { viewModel.getAllItemsSortedByNameAsc() },
@@ -206,7 +203,8 @@ fun CollectionDetailView(
                             onClick = {
                                 onItemClick(item.collectionId, item.itemId)
                             },
-                            currency = currency
+                            currency = currency,
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
