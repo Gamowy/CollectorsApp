@@ -24,23 +24,23 @@ interface ItemsDao {
     @Query("SELECT * FROM Item WHERE collection_id = :collectionId")
     fun getItemsByCollectionId(collectionId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM Item ORDER BY item_name ASC")
-    fun getAllItemsSortedByNameAsc(): Flow<List<Item>>
+    @Query("SELECT * FROM Item WHERE collection_id = :collectionId ORDER BY item_name ASC")
+    fun getAllItemsSortedByNameAsc(collectionId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM Item ORDER BY item_name DESC")
-    fun getAllItemsSortedByNameDesc(): Flow<List<Item>>
+    @Query("SELECT * FROM Item WHERE collection_id = :collectionId ORDER BY item_name DESC")
+    fun getAllItemsSortedByNameDesc(collectionId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM Item ORDER BY item_value ASC")
-    fun getAllItemsSortedByValueAsc(): Flow<List<Item>>
+    @Query("SELECT * FROM Item WHERE collection_id = :collectionId ORDER BY item_value ASC")
+    fun getAllItemsSortedByValueAsc(collectionId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM Item ORDER BY item_value DESC")
-    fun getAllItemsSortedByValueDesc(): Flow<List<Item>>
+    @Query("SELECT * FROM Item WHERE collection_id = :collectionId ORDER BY item_value DESC")
+    fun getAllItemsSortedByValueDesc(collectionId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM Item ORDER BY item_condition ASC")
-    fun getAllItemsSortedByConditionAsc(): Flow<List<Item>>
+    @Query("SELECT * FROM Item WHERE collection_id = :collectionId ORDER BY item_condition ASC")
+    fun getAllItemsSortedByConditionAsc(collectionId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM Item ORDER BY item_condition DESC")
-    fun getAllItemsSortedByConditionDesc(): Flow<List<Item>>
+    @Query("SELECT * FROM Item WHERE collection_id = :collectionId ORDER BY item_condition DESC")
+    fun getAllItemsSortedByConditionDesc(collectionId: Long): Flow<List<Item>>
 
     @Query("DELETE FROM Item")
     suspend fun deleteAllItems()

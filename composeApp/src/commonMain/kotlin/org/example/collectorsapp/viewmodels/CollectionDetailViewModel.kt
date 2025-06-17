@@ -81,7 +81,7 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getAllItemsSortedByNameAsc() {
         viewModelScope.launch {
-            itemsDao.getAllItemsSortedByNameAsc().collectLatest { items ->
+            itemsDao.getAllItemsSortedByNameAsc(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
                         collection = it.collection,
@@ -97,7 +97,7 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getAllItemsSortedByNameDesc() {
         viewModelScope.launch {
-            itemsDao.getAllItemsSortedByNameDesc().collectLatest { items ->
+            itemsDao.getAllItemsSortedByNameDesc(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
                         collection = it.collection,
@@ -113,7 +113,7 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getAllItemsSortedByValueAsc() {
         viewModelScope.launch {
-            itemsDao.getAllItemsSortedByValueAsc().collectLatest { items ->
+            itemsDao.getAllItemsSortedByValueAsc(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
                         collection = it.collection,
@@ -129,7 +129,7 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getAllItemsSortedByValueDesc() {
         viewModelScope.launch {
-            itemsDao.getAllItemsSortedByValueDesc().collectLatest { items ->
+            itemsDao.getAllItemsSortedByValueDesc(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
                         collection = it.collection,
@@ -145,7 +145,7 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getAllItemsSortedByConditionAsc() {
         viewModelScope.launch {
-            itemsDao.getAllItemsSortedByConditionAsc().collectLatest { items ->
+            itemsDao.getAllItemsSortedByConditionAsc(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
                         collection = it.collection,
@@ -161,7 +161,7 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
 
     fun getAllItemsSortedByConditionDesc() {
         viewModelScope.launch {
-            itemsDao.getAllItemsSortedByConditionDesc().collectLatest { items ->
+            itemsDao.getAllItemsSortedByConditionDesc(collectionId).collectLatest { items ->
                 _state.update {
                     it.copy(
                         collection = it.collection,
