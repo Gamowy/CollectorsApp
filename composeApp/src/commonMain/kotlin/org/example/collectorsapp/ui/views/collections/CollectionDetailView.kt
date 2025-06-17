@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -46,10 +47,12 @@ import kotlinproject.composeapp.generated.resources.not_available_name
 import kotlinproject.composeapp.generated.resources.placeholder
 import kotlinproject.composeapp.generated.resources.plus
 import kotlinproject.composeapp.generated.resources.search_items_hint
+import kotlinproject.composeapp.generated.resources.sort_condition
 import org.example.collectorsapp.model.Item
 import org.example.collectorsapp.ui.components.FabButton
 import org.example.collectorsapp.ui.components.ItemCard
 import org.example.collectorsapp.ui.components.SearchBar
+import org.example.collectorsapp.ui.components.SortButton
 import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
 import org.jetbrains.compose.resources.painterResource
@@ -166,11 +169,31 @@ fun CollectionDetailView(
                     modifier = Modifier.padding(8.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                SearchBar(searchQuery = state.searchQuery,
-                    searchHint = stringResource(Res.string.search_items_hint),
-                    onValueChange = { viewModel.searchItems(it) },
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
-                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    SearchBar(searchQuery = state.searchQuery,
+                        searchHint = stringResource(Res.string.search_items_hint),
+                        onValueChange = { viewModel.searchItems(it) },
+                        modifier = Modifier
+                            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+                            .weight(0.85f)
+                    )
+                    Box(modifier = Modifier.weight(0.15f)){
+                        SortButton(
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(4.dp),
+                            textCategoryConditionASC = stringResource(Res.string.sort_condition),
+                            textCategoryConditionDESC = stringResource(Res.string.sort_condition),
+                            onNameAscClick = { viewModel.getAllItemsSortedByNameAsc() },
+                            onNameDescClick = { viewModel.getAllItemsSortedByNameDesc() },
+                            onCategoryConditionAscClick = { viewModel.getAllItemsSortedByConditionAsc() },
+                            onCategoryConditionDescClick = { viewModel.getAllItemsSortedByConditionDesc() },
+                            onValueAscClick = { viewModel.getAllItemsSortedByValueAsc() },
+                            onValueDescClick = { viewModel.getAllItemsSortedByValueDesc() }
+                        )
+                    }
+                }
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
                     contentPadding = PaddingValues(0.dp, 4.dp),

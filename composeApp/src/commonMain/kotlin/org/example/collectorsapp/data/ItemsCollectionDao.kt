@@ -23,4 +23,16 @@ interface ItemsCollectionDao {
 
     @Query("DELETE FROM ItemsCollection")
     suspend fun deleteAllCollections()
+
+    @Query("SELECT * FROM ItemsCollection ORDER BY collection_name ASC")
+    fun getAllCollectionsSortedByNameAsc(): Flow<List<ItemsCollection>>
+
+    @Query("SELECT * FROM ItemsCollection ORDER BY collection_name DESC")
+    fun getAllCollectionsSortedByNameDesc(): Flow<List<ItemsCollection>>
+
+    @Query("SELECT * FROM ItemsCollection ORDER BY collection_category ASC")
+    fun getAllCollectionsSortedByCategoryAsc(): Flow<List<ItemsCollection>>
+
+    @Query("SELECT * FROM ItemsCollection ORDER BY collection_category DESC")
+    fun getAllCollectionsSortedByCategoryDesc(): Flow<List<ItemsCollection>>
 }

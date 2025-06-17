@@ -78,4 +78,100 @@ class CollectionDetailViewModel(private val collectionId: Long, private val repo
     private suspend fun getCollectionValue(collectionId: Long): Double  {
         return itemsDao.getTotalValueByCollectionId(collectionId) ?: 0.0
     }
+
+    fun getAllItemsSortedByNameAsc() {
+        viewModelScope.launch {
+            itemsDao.getAllItemsSortedByNameAsc().collectLatest { items ->
+                _state.update {
+                    it.copy(
+                        collection = it.collection,
+                        collectionValue = it.collectionValue,
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllItemsSortedByNameDesc() {
+        viewModelScope.launch {
+            itemsDao.getAllItemsSortedByNameDesc().collectLatest { items ->
+                _state.update {
+                    it.copy(
+                        collection = it.collection,
+                        collectionValue = it.collectionValue,
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllItemsSortedByValueAsc() {
+        viewModelScope.launch {
+            itemsDao.getAllItemsSortedByValueAsc().collectLatest { items ->
+                _state.update {
+                    it.copy(
+                        collection = it.collection,
+                        collectionValue = it.collectionValue,
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllItemsSortedByValueDesc() {
+        viewModelScope.launch {
+            itemsDao.getAllItemsSortedByValueDesc().collectLatest { items ->
+                _state.update {
+                    it.copy(
+                        collection = it.collection,
+                        collectionValue = it.collectionValue,
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllItemsSortedByConditionAsc() {
+        viewModelScope.launch {
+            itemsDao.getAllItemsSortedByConditionAsc().collectLatest { items ->
+                _state.update {
+                    it.copy(
+                        collection = it.collection,
+                        collectionValue = it.collectionValue,
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
+                    )
+                }
+            }
+        }
+    }
+
+    fun getAllItemsSortedByConditionDesc() {
+        viewModelScope.launch {
+            itemsDao.getAllItemsSortedByConditionDesc().collectLatest { items ->
+                _state.update {
+                    it.copy(
+                        collection = it.collection,
+                        collectionValue = it.collectionValue,
+                        items = items,
+                        searchQuery = it.searchQuery,
+                        searchResultsList = items
+                    )
+                }
+            }
+        }
+    }
 }
