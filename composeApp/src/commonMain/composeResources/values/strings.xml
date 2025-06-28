@@ -5,7 +5,7 @@
     <string name="image_collection_description">Collection Image</string>
     <string name="not_available_description">No description provided</string>
     <string name="not_available_name">Unknown collection</string>
-    <string name="estimated_value">Estimated value: </string>
+    <string name="estimated_value">Value: </string>
     <!-- FabButton -->
     <string name="add_collection">Add collection</string>
     <!-- TopBar -->

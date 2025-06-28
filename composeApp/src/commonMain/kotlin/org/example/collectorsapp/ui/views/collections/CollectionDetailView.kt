@@ -53,6 +53,7 @@ import org.example.collectorsapp.utils.byteArrayToImageBitmap
 import org.example.collectorsapp.viewmodels.CollectionDetailViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToLong
 
 @Composable
 fun CollectionDetailView(
@@ -136,17 +137,19 @@ fun CollectionDetailView(
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(0.5f, fill = false)
                             )
                             Text(text = "${stringResource(Res.string.estimated_value)}${state.collectionValue.let {
-                                if (it > 0) "$it" 
+                                if (it > 0) "${((it * 100).roundToLong() / 100f)}" 
                                 else "0"
                             }} $currency",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(0.5f, fill = false)
                             )
                         }
                     }

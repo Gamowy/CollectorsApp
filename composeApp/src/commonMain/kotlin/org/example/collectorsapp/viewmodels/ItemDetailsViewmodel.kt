@@ -14,6 +14,7 @@ import org.example.collectorsapp.model.Item
 
 class ItemDetailsViewmodel(private val collectionId: Long, private val itemId: Long, private val repository : CollectionDatabase) : ViewModel() {
     private var itemsDao = repository.getItemsDao()
+    private var collectionDao = repository.getCollectionDao()
 
     private var _item = MutableStateFlow(Item(itemId, collectionId, "", "", condition = Condition.New))
     val item = _item.asStateFlow()
@@ -34,6 +35,10 @@ class ItemDetailsViewmodel(private val collectionId: Long, private val itemId: L
     fun deleteItem() {
         viewModelScope.launch {
             itemsDao.delete(item.value)
+            // Update for collection estimated value
+            collectionDao.getCollectionById(collectionId)?.let {
+                collectionDao.upsert(it)
+            }
         }
     }
 }
